@@ -488,11 +488,69 @@ function handleRoute() {
       const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
       window.history.replaceState(null, '', cleanPath);
     }
-  } else if (['about', 'categories', 'craftsmanship', 'contact'].includes(hash)) {
+  } else if (['about', 'categories', 'craftsmanship', 'reviews', 'contact'].includes(hash)) {
     showSection(hash);
   } else {
     showSection('home');
   }
+}
+
+// Reviews Carousel Side Scroll
+function setupReviewsCarousel() {
+  const track = document.getElementById('reviewsScrollTrack');
+  const prevBtn = document.getElementById('reviewsScrollPrev');
+  const nextBtn = document.getElementById('reviewsScrollNext');
+  const dotsContainer = document.getElementById('reviewsDots');
+  if (!track) return;
+
+  const cards = track.querySelectorAll('.review-card');
+  if (!cards.length) return;
+
+  function getCardStep() {
+    const card = cards[0];
+    return card ? card.offsetWidth + 24 : 360;
+  }
+
+  // Generate pagination dots
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    cards.forEach((_, idx) => {
+      const dot = document.createElement('button');
+      dot.className = `review-dot ${idx === 0 ? 'active' : ''}`;
+      dot.setAttribute('aria-label', `Go to review ${idx + 1}`);
+      dot.addEventListener('click', () => {
+        track.scrollTo({ left: idx * getCardStep(), behavior: 'smooth' });
+      });
+      dotsContainer.appendChild(dot);
+    });
+  }
+
+  function updateDots() {
+    if (!dotsContainer) return;
+    const step = getCardStep();
+    const activeIdx = Math.min(
+      cards.length - 1,
+      Math.max(0, Math.round(track.scrollLeft / step))
+    );
+    const dots = dotsContainer.querySelectorAll('.review-dot');
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIdx);
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      track.scrollBy({ left: -getCardStep(), behavior: 'smooth' });
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: getCardStep(), behavior: 'smooth' });
+    });
+  }
+
+  track.addEventListener('scroll', updateDots, { passive: true });
 }
 
 // Global App Namespace Exposure
@@ -510,6 +568,7 @@ window.ShridaaApp.refresh = loadArtworksData;
 // DOM Initialization
 document.addEventListener('DOMContentLoaded', () => {
   loadArtworksData();
+  setupReviewsCarousel();
 
   // Sticky Header Scroll effect
   const header = document.getElementById('siteHeader');
