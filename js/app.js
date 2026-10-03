@@ -49,9 +49,57 @@ function generateArtworkWhatsAppUrl(artwork) {
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 
-// Data Fetching
+// Data Fetching & Rendering
+function renderAll() {
+  // Filter featured
+  window.ShridaaApp.featuredArtworks = window.ShridaaApp.artworks.filter(a => a.featured);
+
+  // Extract dynamic categories
+  const catMap = {};
+  window.ShridaaApp.artworks.forEach(a => {
+    if (a.category) {
+      catMap[a.category] = (catMap[a.category] || 0) + 1;
+    }
+  });
+  window.ShridaaApp.categories = Object.keys(catMap).map(name => ({
+    name,
+    count: catMap[name]
+  }));
+
+  // Update hero price from Swarna Mandala Mirror if found
+  const swarna = window.ShridaaApp.artworks.find(a => a.slug === 'swarna-mandala-mirror' || a.id === 'art-001');
+  if (swarna) {
+    const heroPriceEl = document.getElementById('heroFeaturedPrice');
+    if (heroPriceEl) {
+      heroPriceEl.textContent = formatPrice(swarna.price, swarna.currency, swarna.isPriceVisible);
+    }
+  }
+
+  // Render components
+  renderFeaturedArtworks();
+  renderCategories();
+  renderCategoryPills();
+  renderFullGallery();
+}
+
 async function loadArtworksData() {
   try {
+    // Check if user has saved updated artworks locally in browser
+    const localSaved = localStorage.getItem('shridaa_local_artworks');
+    if (localSaved) {
+      try {
+        const parsed = JSON.parse(localSaved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          window.ShridaaApp.artworks = parsed;
+          renderAll();
+          handleRoute();
+          return;
+        }
+      } catch (e) {
+        console.warn('Could not parse local artworks:', e);
+      }
+    }
+
     let response;
     let data;
     try {
@@ -68,35 +116,7 @@ async function loadArtworksData() {
       window.ShridaaApp.artworks = data.artworks || data;
     }
 
-    // Filter featured
-    window.ShridaaApp.featuredArtworks = window.ShridaaApp.artworks.filter(a => a.featured);
-
-    // Extract dynamic categories
-    const catMap = {};
-    window.ShridaaApp.artworks.forEach(a => {
-      if (a.category) {
-        catMap[a.category] = (catMap[a.category] || 0) + 1;
-      }
-    });
-    window.ShridaaApp.categories = Object.keys(catMap).map(name => ({
-      name,
-      count: catMap[name]
-    }));
-
-    // Update hero price from Swarna Mandala Mirror if found
-    const swarna = window.ShridaaApp.artworks.find(a => a.slug === 'swarna-mandala-mirror' || a.id === 'art-001');
-    if (swarna) {
-      const heroPriceEl = document.getElementById('heroFeaturedPrice');
-      if (heroPriceEl) {
-        heroPriceEl.textContent = formatPrice(swarna.price, swarna.currency, swarna.isPriceVisible);
-      }
-    }
-
-    // Render components
-    renderFeaturedArtworks();
-    renderCategories();
-    renderCategoryPills();
-    renderFullGallery();
+    renderAll();
 
     // Check URL parameters or hash on load
     handleRoute();
@@ -459,6 +479,7 @@ function handleRoute() {
 // Global App Namespace Exposure
 window.ShridaaApp.openDetail = openArtworkDetail;
 window.ShridaaApp.switchDetailImage = switchDetailImage;
+window.ShridaaApp.renderAll = renderAll;
 window.ShridaaApp.filterByCategory = function(category) {
   window.ShridaaApp.activeCategory = category;
   showSection('artworks');
