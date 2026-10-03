@@ -468,7 +468,10 @@ function handleRoute() {
   } else if (hash === 'artworks') {
     showSection('artworks');
   } else if (hash === 'admin') {
-    showSection('admin');
+    const base = window.location.pathname.replace(/\/index\.html$/, '');
+    const adminUrl = base.endsWith('/') ? `${base}admin/` : `${base}/admin/`;
+    window.location.replace(adminUrl);
+    return;
   } else if (['home', 'about', 'categories', 'craftsmanship', 'contact'].includes(hash)) {
     showSection(hash);
   } else {
@@ -528,6 +531,23 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.mobile-nav-link').forEach(link => {
     link.addEventListener('click', () => {
       closeDrawer();
+    });
+  });
+
+  // Handle smooth navigation clicks without exposing # in the URL
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const hash = link.getAttribute('href');
+      if (!hash || hash === '#' || hash.startsWith('#artwork=')) return;
+
+      e.preventDefault();
+      const targetSection = hash.replace('#', '');
+      showSection(targetSection);
+
+      // Clean the address bar so '#' does not appear in browser URL
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
     });
   });
 

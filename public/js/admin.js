@@ -175,7 +175,8 @@ async function loadAdminDashboardData() {
           throw new Error('Fallback to static file');
         }
       } catch (e) {
-        const res = await fetch('data/artworks.json');
+        let res = await fetch('data/artworks.json');
+        if (!res.ok) res = await fetch('../data/artworks.json');
         artworks = await res.json();
       }
     }
