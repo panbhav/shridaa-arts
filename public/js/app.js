@@ -449,6 +449,16 @@ function showSection(sectionId) {
     if (adminView) adminView.style.display = 'none';
     mainContent.style.display = 'block';
 
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.querySelectorAll(`[href="./"], [href="#home"]`).forEach(el => el.classList.add('active'));
+      if (window.history && window.history.replaceState) {
+        const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
+        window.history.replaceState(null, '', cleanPath);
+      }
+      return;
+    }
+
     const targetEl = document.getElementById(sectionId);
     if (targetEl) {
       targetEl.scrollIntoView({ behavior: 'smooth' });
@@ -472,7 +482,13 @@ function handleRoute() {
     const adminUrl = base.endsWith('/') ? `${base}admin/` : `${base}/admin/`;
     window.location.replace(adminUrl);
     return;
-  } else if (['home', 'about', 'categories', 'craftsmanship', 'contact'].includes(hash)) {
+  } else if (hash === 'home') {
+    showSection('home');
+    if (window.history && window.history.replaceState) {
+      const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
+      window.history.replaceState(null, '', cleanPath);
+    }
+  } else if (['about', 'categories', 'craftsmanship', 'contact'].includes(hash)) {
     showSection(hash);
   } else {
     showSection('home');
@@ -531,6 +547,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.mobile-nav-link').forEach(link => {
     link.addEventListener('click', () => {
       closeDrawer();
+    });
+  });
+
+  // Handle Brand Logo & Home clicks to always keep clean root URL without /home or #home
+  document.querySelectorAll('#brandLogo, .brand-logo, a[href="./"], a[href="#home"]').forEach(homeBtn => {
+    homeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.history && window.history.replaceState) {
+        const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
+        window.history.replaceState(null, '', cleanPath);
+      }
     });
   });
 
