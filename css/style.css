@@ -176,13 +176,32 @@ button {
 }
 
 .brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.brand-logo-img {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 2px 6px rgba(197, 154, 78, 0.25));
+}
+
+.brand-logo:hover .brand-logo-img {
+  transform: rotate(22.5deg) scale(1.08);
+}
+
+.brand-text-wrap {
   display: flex;
   flex-direction: column;
 }
 
 .brand-title {
   font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--text-primary);
@@ -190,12 +209,20 @@ button {
 }
 
 .brand-subtitle {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--color-terracotta);
   font-weight: 600;
   margin-top: 2px;
+}
+
+.footer-brand-logo .brand-title {
+  color: #FAF7F2;
+}
+
+.footer-brand-logo .brand-subtitle {
+  color: #E6C27E;
 }
 
 /* Desktop Nav */

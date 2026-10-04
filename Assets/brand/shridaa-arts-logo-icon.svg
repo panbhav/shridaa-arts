@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" aria-label="Shridaa Arts Lippan Art Logo">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C888"/>
+      <stop offset="50%" stop-color="#C59A4E"/>
+      <stop offset="100%" stop-color="#9C7532"/>
+    </linearGradient>
+    <linearGradient id="terraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C9734D"/>
+      <stop offset="100%" stop-color="#9E5333"/>
+    </linearGradient>
+    <linearGradient id="mirrorSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#EAF6F8"/>
+      <stop offset="100%" stop-color="#CDE3E7"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1C1917" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Dotted Circle (Clay Relief Pearls) -->
+  <circle cx="256" cy="256" r="236" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-dasharray="3 9" stroke-linecap="round"/>
+  <circle cx="256" cy="256" r="222" fill="none" stroke="url(#goldGrad)" stroke-width="3"/>
+
+  <!-- 16 Radial Petals with Embedded Diamond Mirrors -->
+  <g transform="translate(256 256)">
+    <!-- 16 Lippan Relief Petals -->
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(0)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(22.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(45)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(67.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(90)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(112.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(135)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(157.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(180)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(202.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(225)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(247.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(270)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(292.5)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(315)"/>
+    <path d="M 0,-218 L 18,-172 L 0,-162 L -18,-172 Z" fill="url(#terraGrad)" stroke="#C59A4E" stroke-width="1.5" transform="rotate(337.5)"/>
+
+    <!-- 16 Diamond Mirror Inlays (Aabhla) -->
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(0)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(22.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(45)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(67.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(90)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(112.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(135)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(157.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(180)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(202.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(225)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(247.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(270)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(292.5)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(315)"/>
+    <polygon points="0,-195 8,-185 0,-175 -8,-185" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1" transform="rotate(337.5)"/>
+  </g>
+
+  <!-- Middle Concentric Ring -->
+  <circle cx="256" cy="256" r="162" fill="none" stroke="url(#terraGrad)" stroke-width="4"/>
+  <circle cx="256" cy="256" r="154" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-dasharray="4 6"/>
+
+  <!-- Core Terracotta Art Medallion -->
+  <circle cx="256" cy="256" r="122" fill="url(#terraGrad)" stroke="url(#goldGrad)" stroke-width="4" filter="url(#softGlow)"/>
+  <circle cx="256" cy="256" r="112" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+
+  <!-- Stylized Sculpted Clay Monogram "S" with Mirror Center -->
+  <path d="M 285,188 C 240,165 210,185 210,215 C 210,240 235,250 256,256 C 277,262 302,272 302,297 C 302,327 270,347 225,324" 
+        fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 285,188 C 240,165 210,185 210,215 C 210,240 235,250 256,256 C 277,262 302,272 302,297 C 302,327 270,347 225,324" 
+        fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Central Diamond Mirror -->
+  <polygon points="256,236 274,256 256,276 238,256" fill="url(#mirrorSheen)" stroke="url(#goldGrad)" stroke-width="2.5"/>
+  <circle cx="256" cy="256" r="3.5" fill="#FFFFFF"/>
+
+  <!-- Corner Accent Mirrors -->
+  <polygon points="256,150 263,158 256,166 249,158" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1.5"/>
+  <polygon points="256,346 263,354 256,362 249,354" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1.5"/>
+  <polygon points="158,256 166,263 158,270 150,263" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1.5"/>
+  <polygon points="354,256 362,263 354,270 346,263" fill="url(#mirrorSheen)" stroke="#C59A4E" stroke-width="1.5"/>
+</svg>
