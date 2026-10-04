@@ -436,10 +436,37 @@ button {
   border-top: 1px solid var(--color-border);
 }
 
+.drawer-artist-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.drawer-artist-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  border: 2px solid var(--color-gold);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
 .drawer-artist {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.drawer-artist-role {
+  display: block;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .drawer-contact-buttons {
@@ -954,11 +981,13 @@ button {
 
 .about-studio-img {
   width: 100%;
-  aspect-ratio: 4 / 4.6;
+  aspect-ratio: 4 / 5.3;
   object-fit: cover;
+  object-position: top center;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border-dark);
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-normal);
 }
 
 .about-experience-card {
