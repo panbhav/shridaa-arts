@@ -35,24 +35,46 @@
 
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- JSON-LD Structured Data for Art Gallery & Artisan -->
+  <!-- JSON-LD Structured Data for Google Knowledge Graph & Rich Search Snippets -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ArtGallery",
-    "name": "Shridaa Arts",
-    "founder": {
-      "@type": "Person",
-      "name": "Ashima Goyal",
-      "jobTitle": "Lippan Art Artisan & Founder"
-    },
-    "description": "Handcrafted Lippan Art, Mud & Mirror Art, and traditional Indian wall decor created by Ashima Goyal.",
-    "telephone": "+919983466388",
-    "email": "goyalashima64@gmail.com",
-    "url": "https://shridaaarts.com/",
-    "currenciesAccepted": "INR",
-    "paymentAccepted": "Cash, UPI, Bank Transfer",
-    "priceRange": "₹100 - ₹5000"
+    "@graph": [
+      {
+        "@type": "ArtGallery",
+        "@id": "https://shridaaarts.com/#organization",
+        "name": "Shridaa Arts",
+        "url": "https://shridaaarts.com/",
+        "logo": "https://shridaaarts.com/Assets/brand/shridaa-arts-logo-full.png",
+        "image": "https://shridaaarts.com/Assets/artworks/swarna-mandala-mirror.jpg",
+        "description": "Authentic handcrafted Kutch Lippan Mud & Mirror Art studio by Ashima Goyal. Sculpted wall mandalas, mirror plaques, and bespoke heritage decor.",
+        "telephone": "+919983466388",
+        "email": "goyalashima64@gmail.com",
+        "priceRange": "₹1000 - ₹10000",
+        "currenciesAccepted": "INR",
+        "paymentAccepted": "Advance Pre-Payment, UPI, GPay, PhonePe, Bank Transfer",
+        "founder": {
+          "@type": "Person",
+          "@id": "https://shridaaarts.com/#artist",
+          "name": "Ashima Goyal",
+          "jobTitle": "Lippan Art Artisan & Founder",
+          "image": "https://shridaaarts.com/Assets/artist/ashima-goyal.jpg",
+          "worksFor": {
+            "@id": "https://shridaaarts.com/#organization"
+          }
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://shridaaarts.com/#website",
+        "url": "https://shridaaarts.com/",
+        "name": "Shridaa Arts",
+        "description": "Handcrafted Lippan Art by Ashima Goyal",
+        "publisher": {
+          "@id": "https://shridaaarts.com/#organization"
+        }
+      }
+    ]
   }
   </script>
 </head>
