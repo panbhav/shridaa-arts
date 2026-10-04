@@ -45,7 +45,7 @@ function generateArtworkWhatsAppUrl(artwork) {
   if (artwork.price && artwork.isPriceVisible !== false) {
     text += ` (Listed Price: ₹${Number(artwork.price).toLocaleString('en-IN')})`;
   }
-  text += `. Could you please share more details?`;
+  text += `. Could you please share ordering, payment (COD/UPI on 9983466388), and delivery details?`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 

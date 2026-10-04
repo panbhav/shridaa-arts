@@ -2276,7 +2276,14 @@ button {
 
 @media (min-width: 768px) {
   .footer-container {
-    grid-template-columns: 1.4fr 0.8fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    grid-template-columns: 1.3fr 0.8fr 1fr 1.2fr;
     gap: 3rem;
   }
 }
@@ -2680,6 +2687,151 @@ button {
   background: var(--color-terracotta);
   width: 24px;
   border-radius: 12px;
+}
+
+/* ==========================================================================
+   ORDERING, PAYMENT & HANDMADE ART POLICY STYLES
+   ========================================================================== */
+.modal-policy-box {
+  margin-top: 1.5rem;
+  padding: 1.15rem 1.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.modal-policy-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.modal-policy-icon {
+  color: var(--color-terracotta);
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-policy-row strong {
+  color: var(--text-primary);
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.policy-phone-link {
+  color: var(--color-terracotta);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Custom CTA Policy Note */
+.custom-cta-policy-note {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.88rem;
+  color: #EDE6DD;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.custom-cta-policy-note strong {
+  color: #FFFFFF;
+}
+
+.custom-cta-policy-note a {
+  color: #FFD29D;
+  text-decoration: underline;
+}
+
+/* Contact Section Policy Notice Card */
+.order-policy-notice-card {
+  margin-top: 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .order-policy-notice-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.policy-notice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.policy-notice-icon {
+  color: var(--color-terracotta);
+  background: var(--color-sand);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.policy-notice-item h4 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.policy-notice-item p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.policy-notice-item a {
+  color: var(--color-terracotta);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Footer Policy List */
+.footer-policy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #C8BFB3;
+}
+
+.footer-policy-list strong {
+  color: #FFFFFF;
+}
+
+.footer-policy-list a {
+  color: #E2A76F;
+  text-decoration: underline;
 }
 
 /* Accessibility & Print */
