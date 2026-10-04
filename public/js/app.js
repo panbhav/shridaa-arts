@@ -44,9 +44,9 @@ function generateArtworkWhatsAppUrl(artwork) {
   const phone = '919983466388';
   let text = `Hello Shridaa Arts, I am interested in the artwork "${artwork.name}"`;
   if (artwork.price && artwork.isPriceVisible !== false) {
-    text += ` (Listed Price: ₹${Number(artwork.price).toLocaleString('en-IN')})`;
+    text += ` (Listed Price: ₹${Number(artwork.price).toLocaleString('en-IN')}, Shipping Excluded)`;
   }
-  text += `. Could you please share ordering, payment (COD/UPI on 9983466388), and delivery details?`;
+  text += `. Could you please share ordering, advance pre-payment (UPI on 9983466388), and shipping details for my location?`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 
@@ -172,6 +172,7 @@ function createArtworkCardHtml(artwork) {
           <div class="artwork-price-display">
             <span class="price-val">${priceDisplay}</span>
             ${origPriceDisplay ? `<span class="price-orig">${origPriceDisplay}</span>` : ''}
+            <span class="card-shipping-tag">Shipping Excluded</span>
           </div>
           <button type="button" class="card-details-link" onclick="window.ShridaaApp.openDetail('${artwork.id}')">
             View Details →
@@ -496,7 +497,7 @@ function renderShortlist() {
 
   if (waBtn) {
     const names = savedArtworks.map(a => `• ${a.name} (${formatPrice(a.price)})`).join('%0A');
-    const waText = `Hello Ashima, I have curated a shortlist of ${savedArtworks.length} Lippan art pieces from Shridaa Arts:%0A%0A${names}%0A%0ATotal Value: ₹${totalValue.toLocaleString('en-IN')}%0A%0ACould we discuss order delivery, payment (COD/UPI on 9983466388) and availability?`;
+    const waText = `Hello Ashima, I have curated a shortlist of ${savedArtworks.length} Lippan art pieces from Shridaa Arts:%0A%0A${names}%0A%0ATotal Art Value: ₹${totalValue.toLocaleString('en-IN')} (Shipping Excluded)%0A%0ACould we discuss order delivery, shipping calculation, and advance pre-payment (UPI on 9983466388)?`;
     waBtn.href = `https://wa.me/919983466388?text=${waText}`;
   }
 }
@@ -523,7 +524,7 @@ function openWallVisualizer(artworkId) {
   if (dimEl) dimEl.textContent = art.size || '16 × 16 inches';
 
   if (waBtn) {
-    const text = `Hello Ashima, I used the Wall Visualizer on your website and loved "${art.name}". I would like to enquire about placing this piece in my home.`;
+    const text = `Hello Ashima, I used the Wall Visualizer on your website and loved "${art.name}". I would like to enquire about placing this piece in my home and check advance pre-payment and shipping charges.`;
     waBtn.href = `https://wa.me/919983466388?text=${encodeURIComponent(text)}`;
   }
 
@@ -584,7 +585,7 @@ function setupCommissionEstimator() {
     if (timeResult) timeResult.textContent = `⏱ Handcrafting Time: ${days}`;
 
     if (waBtn) {
-      const msg = `Hello Ashima, I calculated a bespoke Lippan art commission on your website:%0A- Shape: ${currentShape.toUpperCase()}%0A- Size: ${currentSize} × ${currentSize} inches%0A- Complexity: ${currentDetail.toUpperCase()}%0A- Estimated Range: ₹${lowEst.toLocaleString('en-IN')} – ₹${highEst.toLocaleString('en-IN')}%0A%0ACan we discuss motif customization and payment (COD/direct payment on 9983466388)?`;
+      const msg = `Hello Ashima, I calculated a bespoke Lippan art commission on your website:%0A- Shape: ${currentShape.toUpperCase()}%0A- Size: ${currentSize} × ${currentSize} inches%0A- Complexity: ${currentDetail.toUpperCase()}%0A- Estimated Range: ₹${lowEst.toLocaleString('en-IN')} – ₹${highEst.toLocaleString('en-IN')} (Shipping Excluded)%0A%0ACan we discuss motif customization, shipping, and advance pre-payment (direct transfer on 9983466388)?`;
       waBtn.href = `https://wa.me/919983466388?text=${msg}`;
     }
   }

@@ -917,8 +917,8 @@ button {
 
 .artwork-price-display {
   display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .price-val {
@@ -926,12 +926,22 @@ button {
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.1;
 }
 
 .price-orig {
   font-size: 0.85rem;
   color: var(--text-muted);
   text-decoration: line-through;
+  margin-left: 0.35rem;
+}
+
+.card-shipping-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-terracotta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .card-details-link {
