@@ -14,7 +14,8 @@ window.ShridaaApp = {
   sortOption: 'featured',
   selectedArtwork: null,
   lightboxImages: [],
-  lightboxIndex: 0
+  lightboxIndex: 0,
+  shortlist: JSON.parse(localStorage.getItem('shridaa_shortlist') || '[]')
 };
 
 // Utilities
@@ -132,9 +133,18 @@ function createArtworkCardHtml(artwork) {
   const priceDisplay = formatPrice(artwork.price, artwork.currency, artwork.isPriceVisible);
   const origPriceDisplay = artwork.originalPrice ? formatPrice(artwork.originalPrice) : '';
   const availClass = artwork.availability === 'Sold' ? 'sold' : (artwork.availability === 'Made to Order' ? 'made-to-order' : '');
+  const isShortlisted = window.ShridaaApp.shortlist.includes(artwork.id);
   
   return `
     <article class="artwork-card" data-id="${artwork.id}">
+      <button type="button" 
+              class="card-shortlist-btn ${isShortlisted ? 'active' : ''}" 
+              onclick="event.stopPropagation(); window.ShridaaApp.toggleShortlist('${artwork.id}')" 
+              aria-label="${isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}"
+              title="${isShortlisted ? 'Saved in Shortlist' : 'Add to Shortlist'}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="${isShortlisted ? '#C59A4E' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+
       <div class="artwork-card-img-wrap" onclick="window.ShridaaApp.openDetail('${artwork.id}')">
         <picture>
           <source srcset="${artwork.image}" type="image/webp">
@@ -145,7 +155,13 @@ function createArtworkCardHtml(artwork) {
         </picture>
         <span class="availability-badge ${availClass}">${artwork.availability || 'Available'}</span>
         <div class="quick-view-overlay">
-          <span class="quick-view-btn">View Details</span>
+          <div class="card-quick-actions">
+            <span class="quick-view-btn">View Details</span>
+            <button type="button" class="wall-preview-btn" onclick="event.stopPropagation(); window.ShridaaApp.openWallVisualizer('${artwork.id}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+              ✦ Wall Preview
+            </button>
+          </div>
         </div>
       </div>
       <div class="artwork-card-body">
@@ -349,12 +365,259 @@ function openArtworkDetail(artworkId) {
     waBtn.href = generateArtworkWhatsAppUrl(artwork);
   }
 
+  // Update modal shortlist button text/state
+  updateModalShortlistBtn(artwork.id);
+
   // Open modal
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
   // Push state to URL hash without jumping
   window.location.hash = `artwork=${artwork.id}`;
+}
+
+function updateModalShortlistBtn(artId) {
+  const btn = document.getElementById('modalShortlistBtn');
+  const txt = document.getElementById('modalShortlistText');
+  if (!btn || !txt) return;
+  const isSaved = window.ShridaaApp.shortlist.includes(artId);
+  txt.textContent = isSaved ? 'Saved in Shortlist ✓' : 'Add to Shortlist';
+  btn.style.color = isSaved ? '#C59A4E' : '';
+  btn.style.borderColor = isSaved ? '#C59A4E' : '';
+}
+
+// ✦ SHORTLIST MANAGEMENT FUNCTIONS
+function toggleShortlist(artworkId) {
+  const idx = window.ShridaaApp.shortlist.indexOf(artworkId);
+  const art = window.ShridaaApp.artworks.find(a => a.id === artworkId);
+  if (idx > -1) {
+    window.ShridaaApp.shortlist.splice(idx, 1);
+    showToast(`Removed from your Shortlist`, 'info');
+  } else {
+    window.ShridaaApp.shortlist.push(artworkId);
+    showToast(`Saved "${art ? art.name : 'Artwork'}" to Shortlist`, 'success');
+  }
+  
+  localStorage.setItem('shridaa_shortlist', JSON.stringify(window.ShridaaApp.shortlist));
+  updateShortlistBadge();
+  renderShortlist();
+  
+  // Update card buttons across document
+  document.querySelectorAll(`.artwork-card[data-id="${artworkId}"] .card-shortlist-btn`).forEach(btn => {
+    const isSaved = window.ShridaaApp.shortlist.includes(artworkId);
+    btn.classList.toggle('active', isSaved);
+    btn.querySelector('svg').setAttribute('fill', isSaved ? '#C59A4E' : 'none');
+  });
+
+  // Update detail modal button if open
+  if (window.ShridaaApp.selectedArtwork && window.ShridaaApp.selectedArtwork.id === artworkId) {
+    updateModalShortlistBtn(artworkId);
+  }
+}
+
+function updateShortlistBadge() {
+  const count = window.ShridaaApp.shortlist.length;
+  
+  // Header badge
+  const headerCount = document.getElementById('shortlistCount');
+  if (headerCount) headerCount.textContent = count;
+  
+  // Mobile bar badge
+  const mobileBarBadge = document.getElementById('mobileBarBadge');
+  if (mobileBarBadge) mobileBarBadge.textContent = count;
+  
+  // Drawer count badge
+  const drawerCount = document.getElementById('shortlistCountBadge');
+  if (drawerCount) drawerCount.textContent = `${count} ${count === 1 ? 'Artwork' : 'Artworks'}`;
+}
+
+function openShortlist() {
+  const drawer = document.getElementById('shortlistDrawer');
+  const backdrop = document.getElementById('shortlistBackdrop');
+  if (drawer) drawer.classList.add('active');
+  if (backdrop) backdrop.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderShortlist();
+}
+
+function closeShortlist() {
+  const drawer = document.getElementById('shortlistDrawer');
+  const backdrop = document.getElementById('shortlistBackdrop');
+  if (drawer) drawer.classList.remove('active');
+  if (backdrop) backdrop.classList.remove('active');
+  
+  if (!document.getElementById('artworkModal') || document.getElementById('artworkModal').style.display === 'none') {
+    document.body.style.overflow = '';
+  }
+}
+
+function renderShortlist() {
+  const emptyState = document.getElementById('shortlistEmptyState');
+  const itemsList = document.getElementById('shortlistItemsList');
+  const footer = document.getElementById('shortlistFooter');
+  const totalValEl = document.getElementById('shortlistTotalVal');
+  const waBtn = document.getElementById('shortlistWhatsappBtn');
+  
+  if (!itemsList) return;
+
+  const savedArtworks = window.ShridaaApp.shortlist
+    .map(id => window.ShridaaApp.artworks.find(a => a.id === id))
+    .filter(Boolean);
+
+  if (savedArtworks.length === 0) {
+    if (emptyState) emptyState.style.display = 'block';
+    itemsList.innerHTML = '';
+    if (footer) footer.style.display = 'none';
+    return;
+  }
+
+  if (emptyState) emptyState.style.display = 'none';
+  if (footer) footer.style.display = 'block';
+
+  let totalValue = 0;
+  itemsList.innerHTML = savedArtworks.map(art => {
+    if (art.price) totalValue += Number(art.price);
+    return `
+      <div class="shortlist-item">
+        <img src="${art.fallbackImage || art.image}" alt="${art.name}" class="shortlist-item-img">
+        <div class="shortlist-item-info">
+          <h4 class="shortlist-item-title">${art.name}</h4>
+          <span class="shortlist-item-meta">${art.size || 'Lippan Mud & Mirror'}</span>
+          <span class="shortlist-item-price">${formatPrice(art.price, art.currency, art.isPriceVisible)}</span>
+        </div>
+        <button type="button" class="shortlist-remove-btn" onclick="window.ShridaaApp.toggleShortlist('${art.id}')" title="Remove from shortlist">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  if (totalValEl) {
+    totalValEl.textContent = '₹' + totalValue.toLocaleString('en-IN');
+  }
+
+  if (waBtn) {
+    const names = savedArtworks.map(a => `• ${a.name} (${formatPrice(a.price)})`).join('%0A');
+    const waText = `Hello Ashima, I have curated a shortlist of ${savedArtworks.length} Lippan art pieces from Shridaa Arts:%0A%0A${names}%0A%0ATotal Value: ₹${totalValue.toLocaleString('en-IN')}%0A%0ACould we discuss order delivery, payment (COD/UPI on 9983466388) and availability?`;
+    waBtn.href = `https://wa.me/919983466388?text=${waText}`;
+  }
+}
+
+// ✦ WALL ART VISUALIZER FUNCTIONS
+function openWallVisualizer(artworkId) {
+  const art = artworkId 
+    ? window.ShridaaApp.artworks.find(a => a.id === artworkId) 
+    : window.ShridaaApp.selectedArtwork;
+    
+  if (!art) return;
+
+  const modal = document.getElementById('wallVisualizerModal');
+  const imgEl = document.getElementById('wallArtImg');
+  const nameEl = document.getElementById('wallVisArtName');
+  const priceEl = document.getElementById('wallArtPrice');
+  const dimEl = document.getElementById('wallArtDim');
+  const waBtn = document.getElementById('wallVisWhatsappBtn');
+  const shortlistBtn = document.getElementById('wallVisShortlistBtn');
+
+  if (imgEl) imgEl.src = art.fallbackImage || art.image;
+  if (nameEl) nameEl.textContent = art.name;
+  if (priceEl) priceEl.textContent = formatPrice(art.price, art.currency, art.isPriceVisible);
+  if (dimEl) dimEl.textContent = art.size || '16 × 16 inches';
+
+  if (waBtn) {
+    const text = `Hello Ashima, I used the Wall Visualizer on your website and loved "${art.name}". I would like to enquire about placing this piece in my home.`;
+    waBtn.href = `https://wa.me/919983466388?text=${encodeURIComponent(text)}`;
+  }
+
+  if (shortlistBtn) {
+    shortlistBtn.onclick = () => {
+      toggleShortlist(art.id);
+      const isSaved = window.ShridaaApp.shortlist.includes(art.id);
+      shortlistBtn.innerHTML = isSaved 
+        ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="#C59A4E" stroke="#C59A4E" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved`
+        : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Save to Shortlist`;
+    };
+  }
+
+  if (modal) modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeWallVisualizer() {
+  const modal = document.getElementById('wallVisualizerModal');
+  if (modal) modal.classList.remove('active');
+  if (!document.getElementById('artworkModal') || document.getElementById('artworkModal').style.display === 'none') {
+    document.body.style.overflow = '';
+  }
+}
+
+// ✦ SMART COMMISSION ESTIMATOR INITIALIZER
+function setupCommissionEstimator() {
+  const container = document.getElementById('commissionEstimator');
+  if (!container) return;
+
+  const shapePills = document.querySelectorAll('#estShapePills .est-pill');
+  const detailPills = document.querySelectorAll('#estDetailPills .est-pill');
+  const sizeSlider = document.getElementById('estSizeSlider');
+  const sizeDisplay = document.getElementById('estSizeDisplay');
+  const priceResult = document.getElementById('estPriceResult');
+  const timeResult = document.getElementById('estTimeResult');
+  const waBtn = document.getElementById('estWhatsappBtn');
+
+  let currentShape = 'round';
+  let currentFactor = 1.0;
+  let currentDetail = 'standard';
+  let currentRate = 13;
+  let currentSize = 16;
+
+  function calculateEstimate() {
+    // Pricing formula based on square inches, detail density rate, and geometry factor
+    const area = currentSize * currentSize;
+    const baseCost = 1400 + (area * 0.005 * currentRate * 10 * currentFactor);
+    const lowEst = Math.round(baseCost / 100) * 100;
+    const highEst = Math.round((baseCost * 1.22) / 100) * 100;
+
+    let days = '5–7 days';
+    if (currentSize >= 28) days = '12–16 days';
+    else if (currentSize >= 20) days = '8–12 days';
+
+    if (sizeDisplay) sizeDisplay.textContent = `${currentSize} × ${currentSize} inches`;
+    if (priceResult) priceResult.textContent = `₹${lowEst.toLocaleString('en-IN')} – ₹${highEst.toLocaleString('en-IN')}`;
+    if (timeResult) timeResult.textContent = `⏱ Handcrafting Time: ${days}`;
+
+    if (waBtn) {
+      const msg = `Hello Ashima, I calculated a bespoke Lippan art commission on your website:%0A- Shape: ${currentShape.toUpperCase()}%0A- Size: ${currentSize} × ${currentSize} inches%0A- Complexity: ${currentDetail.toUpperCase()}%0A- Estimated Range: ₹${lowEst.toLocaleString('en-IN')} – ₹${highEst.toLocaleString('en-IN')}%0A%0ACan we discuss motif customization and payment (COD/direct payment on 9983466388)?`;
+      waBtn.href = `https://wa.me/919983466388?text=${msg}`;
+    }
+  }
+
+  shapePills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      shapePills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      currentShape = pill.dataset.shape;
+      currentFactor = parseFloat(pill.dataset.factor) || 1.0;
+      calculateEstimate();
+    });
+  });
+
+  detailPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      detailPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      currentDetail = pill.dataset.detail;
+      currentRate = parseFloat(pill.dataset.rate) || 13;
+      calculateEstimate();
+    });
+  });
+
+  if (sizeSlider) {
+    sizeSlider.addEventListener('input', (e) => {
+      currentSize = parseInt(e.target.value, 10);
+      calculateEstimate();
+    });
+  }
+
+  // Initial calculation
+  calculateEstimate();
 }
 
 function switchDetailImage(src, index) {
@@ -564,11 +827,18 @@ window.ShridaaApp.filterByCategory = function(category) {
   renderFullGallery();
 };
 window.ShridaaApp.refresh = loadArtworksData;
+window.ShridaaApp.toggleShortlist = toggleShortlist;
+window.ShridaaApp.openShortlist = openShortlist;
+window.ShridaaApp.closeShortlist = closeShortlist;
+window.ShridaaApp.openWallVisualizer = openWallVisualizer;
+window.ShridaaApp.closeWallVisualizer = closeWallVisualizer;
 
 // DOM Initialization
 document.addEventListener('DOMContentLoaded', () => {
   loadArtworksData();
   setupReviewsCarousel();
+  setupCommissionEstimator();
+  updateShortlistBadge();
 
   // Sticky Header Scroll effect
   const header = document.getElementById('siteHeader');
@@ -784,11 +1054,109 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Shortlist Drawer Triggers
+  const openShortlistBtn = document.getElementById('openShortlistBtn');
+  const closeShortlistBtn = document.getElementById('closeShortlistBtn');
+  const shortlistBackdrop = document.getElementById('shortlistBackdrop');
+  const mobileShortlistLink = document.getElementById('mobileShortlistLink');
+  const mobileBarShortlistBtn = document.getElementById('mobileBarShortlistBtn');
+  const emptyBrowseBtn = document.getElementById('emptyBrowseBtn');
+
+  if (openShortlistBtn) openShortlistBtn.addEventListener('click', openShortlist);
+  if (closeShortlistBtn) closeShortlistBtn.addEventListener('click', closeShortlist);
+  if (shortlistBackdrop) shortlistBackdrop.addEventListener('click', closeShortlist);
+  if (mobileShortlistLink) {
+    mobileShortlistLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeDrawer();
+      openShortlist();
+    });
+  }
+  if (mobileBarShortlistBtn) mobileBarShortlistBtn.addEventListener('click', openShortlist);
+  if (emptyBrowseBtn) {
+    emptyBrowseBtn.addEventListener('click', () => {
+      closeShortlist();
+      showSection('artworks');
+    });
+  }
+
+  // Modal Wall Preview & Shortlist Buttons
+  const modalWallPreviewBtn = document.getElementById('modalWallPreviewBtn');
+  const modalShortlistBtn = document.getElementById('modalShortlistBtn');
+  if (modalWallPreviewBtn) {
+    modalWallPreviewBtn.addEventListener('click', () => {
+      if (window.ShridaaApp.selectedArtwork) {
+        openWallVisualizer(window.ShridaaApp.selectedArtwork.id);
+      }
+    });
+  }
+  if (modalShortlistBtn) {
+    modalShortlistBtn.addEventListener('click', () => {
+      if (window.ShridaaApp.selectedArtwork) {
+        toggleShortlist(window.ShridaaApp.selectedArtwork.id);
+      }
+    });
+  }
+
+  // Wall Visualizer Modal Controls
+  const wallVisCloseBtn = document.getElementById('wallVisCloseBtn');
+  const wallVisualizerModal = document.getElementById('wallVisualizerModal');
+  const wallStage = document.getElementById('wallStage');
+  const wallScaleSlider = document.getElementById('wallScaleSlider');
+  const wallScaleVal = document.getElementById('wallScaleVal');
+  const wallArtworkMount = document.getElementById('wallArtworkMount');
+
+  if (wallVisCloseBtn) wallVisCloseBtn.addEventListener('click', closeWallVisualizer);
+  if (wallVisualizerModal) {
+    wallVisualizerModal.addEventListener('click', (e) => {
+      if (e.target === wallVisualizerModal) closeWallVisualizer();
+    });
+  }
+
+  // Wall Paint Swatches
+  document.querySelectorAll('#wallSwatches .wall-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      document.querySelectorAll('#wallSwatches .wall-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      const color = swatch.dataset.color || '#EAE6DF';
+      if (wallStage) wallStage.style.setProperty('--wall-bg', color);
+    });
+  });
+
+  // Room Scene Switcher
+  document.querySelectorAll('#roomSceneButtons .vis-btn-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#roomSceneButtons .vis-btn-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const scene = btn.dataset.scene;
+      
+      const consoleEl = document.getElementById('furnitureConsole');
+      const sofaEl = document.getElementById('furnitureSofa');
+      const mandirEl = document.getElementById('furnitureMandir');
+
+      if (consoleEl) consoleEl.style.display = scene === 'console' ? 'flex' : 'none';
+      if (sofaEl) sofaEl.style.display = scene === 'sofa' ? 'block' : 'none';
+      if (mandirEl) mandirEl.style.display = scene === 'mandir' ? 'flex' : 'none';
+    });
+  });
+
+  // Wall Scale Slider
+  if (wallScaleSlider && wallArtworkMount && wallScaleVal) {
+    wallScaleSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      wallScaleVal.textContent = `${val}%`;
+      const scale = val / 100;
+      wallArtworkMount.style.setProperty('--art-scale', scale);
+    });
+  }
+
   // Keyboard navigation for modals
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeLightbox();
       closeArtworkDetail();
+      closeWallVisualizer();
+      closeShortlist();
     } else if (e.key === 'ArrowLeft') {
       if (lbModal && lbModal.style.display === 'flex') navigateLightbox(-1);
     } else if (e.key === 'ArrowRight') {

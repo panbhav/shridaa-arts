@@ -91,6 +91,12 @@
 
       <!-- Header CTAs -->
       <div class="header-actions">
+        <!-- Collector Shortlist Button -->
+        <button type="button" class="header-shortlist-btn" id="openShortlistBtn" aria-label="View Saved Shortlist" title="View Saved Shortlist">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span class="shortlist-counter" id="shortlistCountBadge" style="display: none;">0</span>
+        </button>
+
         <a href="https://wa.me/919983466388?text=Hello%20Shridaa%20Arts,%20I%20would%20like%20to%20enquire%20about%20your%20handcrafted%20Lippan%20artworks." 
            target="_blank" 
            rel="noopener noreferrer" 
@@ -126,6 +132,12 @@
       <li><a href="#about" class="mobile-nav-link">Meet the Artist</a></li>
       <li><a href="#craftsmanship" class="mobile-nav-link">Craftsmanship</a></li>
       <li><a href="#reviews" class="mobile-nav-link">Client Reviews</a></li>
+      <li>
+        <a href="#shortlist" class="mobile-nav-link mobile-shortlist-nav" id="mobileShortlistLink">
+          <span>Saved Shortlist</span>
+          <span class="mobile-shortlist-counter" id="mobileShortlistCounter">0 Saved</span>
+        </a>
+      </li>
       <li><a href="#contact" class="mobile-nav-link">Contact & Location</a></li>
       <li><a href="admin/" class="mobile-nav-link admin-nav-link">Artist Portal</a></li>
     </ul>
@@ -415,6 +427,63 @@
             </div>
             <div class="custom-cta-policy-note">
               <span>✦ <strong>Payment & Policy:</strong> Cash on Delivery (COD) available • Contact directly on <a href="tel:9983466388"><strong>9983466388</strong></a> for payment (UPI/COD) • All handcrafted pieces are <strong>Non-Refundable with a No Return Policy</strong>.</span>
+            </div>
+          </div>
+
+          <!-- SMART COMMISSION ESTIMATOR WIDGET -->
+          <div class="custom-estimator-card" id="commissionEstimator">
+            <div class="estimator-header">
+              <span class="est-badge">✦ Smart Price & Size Estimator</span>
+              <h3 class="est-title">Estimate Your Bespoke Piece</h3>
+              <p class="est-sub">Select preferred geometry, size, and finish to get instant crafting estimates.</p>
+            </div>
+
+            <div class="est-form-group">
+              <label class="est-label">1. Desired Shape / Format</label>
+              <div class="est-pill-grid" id="estShapePills">
+                <button type="button" class="est-pill active" data-shape="round" data-factor="1.0">Round / Circular</button>
+                <button type="button" class="est-pill" data-shape="square" data-factor="1.05">Square / Diamond</button>
+                <button type="button" class="est-pill" data-shape="jharokha" data-factor="1.25">Arched Jharokha</button>
+                <button type="button" class="est-pill" data-shape="panel" data-factor="1.15">Rectangle Diptych</button>
+              </div>
+            </div>
+
+            <div class="est-form-group">
+              <div class="est-label-row">
+                <label class="est-label" for="estSizeSlider">2. Dimensions</label>
+                <span class="est-val-badge" id="estSizeDisplay">16 × 16 inches</span>
+              </div>
+              <input type="range" id="estSizeSlider" class="est-slider" min="10" max="36" step="2" value="16">
+              <div class="est-slider-labels">
+                <span>10" (Compact)</span>
+                <span>18" (Standard)</span>
+                <span>24" (Grand)</span>
+                <span>36" (Statement)</span>
+              </div>
+            </div>
+
+            <div class="est-form-group">
+              <label class="est-label">3. Design Complexity & Mirror Density</label>
+              <div class="est-pill-grid" id="estDetailPills">
+                <button type="button" class="est-pill" data-detail="minimal" data-rate="10">Subtle Minimalist</button>
+                <button type="button" class="est-pill active" data-detail="standard" data-rate="13">Classic Mandala Relief</button>
+                <button type="button" class="est-pill" data-detail="dense" data-rate="16">Intricate Heritage & Gold</button>
+              </div>
+            </div>
+
+            <div class="estimator-result-box">
+              <div class="est-result-main">
+                <div class="est-price-col">
+                  <span class="est-res-label">Estimated Studio Value</span>
+                  <span class="est-price-range" id="estPriceResult">₹2,800 – ₹3,400</span>
+                  <span class="est-duration-tag" id="estTimeResult">⏱ Handcrafting Time: 5–7 days</span>
+                </div>
+                <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp est-book-btn" id="estWhatsappBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  Book Estimate on WhatsApp
+                </a>
+              </div>
+              <p class="est-note">*Final quotation may vary slightly based on custom motif nuances and bespoke colour pigments.</p>
             </div>
           </div>
         </div>
@@ -985,13 +1054,21 @@
             </a>
 
             <div class="detail-sub-actions">
+              <button type="button" class="btn btn-secondary" id="modalWallPreviewBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                ✦ Wall Preview
+              </button>
+              <button type="button" class="btn btn-secondary" id="modalShortlistBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <span id="modalShortlistText">Add to Shortlist</span>
+              </button>
               <a href="tel:9983466388" class="btn btn-outline">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 Call Artist
               </a>
               <button type="button" class="btn btn-secondary" id="modalShareBtn">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                Share Artwork
+                Share
               </button>
             </div>
 
@@ -1204,6 +1281,175 @@
       </div>
     </div>
   </footer>
+
+  <!-- ✦ SMART INTERACTIVE FEATURE: ROOM & WALL ART VISUALIZER MODAL -->
+  <div class="wall-visualizer-modal" id="wallVisualizerModal" role="dialog" aria-modal="true" aria-labelledby="wallVisTitle">
+    <div class="wall-visualizer-card">
+      <div class="wall-vis-header">
+        <div class="wall-vis-title-col">
+          <span class="wall-vis-badge">✦ Interactive Room Preview</span>
+          <h3 id="wallVisTitle" class="wall-vis-title">See Artwork on Your Wall</h3>
+          <p class="wall-vis-sub" id="wallVisArtName">Swarna Mandala Mirror</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="wallVisCloseBtn" aria-label="Close Wall Visualizer">✕</button>
+      </div>
+
+      <div class="wall-vis-body">
+        <!-- Interactive Room Stage -->
+        <div class="wall-room-stage" id="wallStage" style="--wall-bg: #EAE6DF;">
+          <!-- Virtual Wall Texture -->
+          <div class="wall-texture-overlay"></div>
+          
+          <!-- Hung Artwork Frame & Mirror Glimmer -->
+          <div class="wall-artwork-mount" id="wallArtworkMount" style="--art-scale: 1.0;">
+            <div class="wall-art-frame">
+              <img src="Assets/artworks/art-01.jpg" alt="Wall Artwork" id="wallArtImg" class="wall-art-image">
+              <div class="wall-mirror-glint"></div>
+            </div>
+            <div class="wall-art-shadow"></div>
+          </div>
+
+          <!-- Ambient Room Setting Base (Furniture Silhouette) -->
+          <div class="wall-room-furniture" id="wallFurniture">
+            <div class="furniture-console" id="furnitureConsole">
+              <div class="console-surface"></div>
+              <div class="console-vase"></div>
+              <div class="console-plant"></div>
+            </div>
+            <div class="furniture-sofa" id="furnitureSofa" style="display: none;">
+              <div class="sofa-back"></div>
+              <div class="sofa-cushions">
+                <span class="cushion"></span>
+                <span class="cushion"></span>
+                <span class="cushion"></span>
+              </div>
+            </div>
+            <div class="furniture-mandir" id="furnitureMandir" style="display: none;">
+              <div class="mandir-shrine">
+                <span class="diya diya-1">🪔</span>
+                <span class="diya diya-2">🪔</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wall-floor-base"></div>
+        </div>
+
+        <!-- Controls Toolbar -->
+        <div class="wall-vis-controls">
+          <!-- 1. Wall Paint Swatches -->
+          <div class="vis-ctrl-group">
+            <span class="vis-ctrl-label">Wall Paint Shade:</span>
+            <div class="wall-swatches" id="wallSwatches">
+              <button type="button" class="wall-swatch active" data-color="#EAE6DF" title="Warm Ivory" style="background: #EAE6DF;"></button>
+              <button type="button" class="wall-swatch" data-color="#D9C5B2" title="Sandstone Beige" style="background: #D9C5B2;"></button>
+              <button type="button" class="wall-swatch" data-color="#B87352" title="Terracotta Earth" style="background: #B87352;"></button>
+              <button type="button" class="wall-swatch" data-color="#1E392A" title="Royal Emerald" style="background: #1E392A;"></button>
+              <button type="button" class="wall-swatch" data-color="#1F2A38" title="Heritage Indigo" style="background: #1F2A38;"></button>
+              <button type="button" class="wall-swatch" data-color="#2D2825" title="Dark Charcoal" style="background: #2D2825;"></button>
+            </div>
+          </div>
+
+          <!-- 2. Room Setting / Furniture Switcher -->
+          <div class="vis-ctrl-group">
+            <span class="vis-ctrl-label">Room Ambience:</span>
+            <div class="vis-toggle-btns" id="roomSceneButtons">
+              <button type="button" class="vis-btn-pill active" data-scene="console">Foyer Console</button>
+              <button type="button" class="vis-btn-pill" data-scene="sofa">Living Room</button>
+              <button type="button" class="vis-btn-pill" data-scene="mandir">Pooja Mandir</button>
+            </div>
+          </div>
+
+          <!-- 3. Scale Adjustment Slider -->
+          <div class="vis-ctrl-group">
+            <div class="vis-label-flex">
+              <span class="vis-ctrl-label">Scale Proportion:</span>
+              <span class="vis-val-indicator" id="wallScaleVal">100%</span>
+            </div>
+            <input type="range" id="wallScaleSlider" class="vis-slider" min="70" max="135" value="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="wall-vis-footer">
+        <div class="wall-vis-meta">
+          <span class="wall-art-price" id="wallArtPrice">₹2,800</span>
+          <span class="wall-art-dim" id="wallArtDim">14 × 14 inches</span>
+        </div>
+        <div class="wall-vis-footer-actions">
+          <button type="button" class="btn btn-secondary" id="wallVisShortlistBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Save to Shortlist
+          </button>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp" id="wallVisWhatsappBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Enquire This Piece
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✦ SMART INTERACTIVE FEATURE: COLLECTOR SHORTLIST SLIDE-OVER DRAWER -->
+  <div class="shortlist-backdrop" id="shortlistBackdrop"></div>
+  <aside class="shortlist-drawer" id="shortlistDrawer" aria-label="Collector Shortlist">
+    <div class="shortlist-header">
+      <div class="shortlist-header-left">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C59A4E" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div>
+          <h3 class="shortlist-title">My Curated Shortlist</h3>
+          <span class="shortlist-count-badge" id="shortlistCountBadge">0 Artworks</span>
+        </div>
+      </div>
+      <button type="button" class="shortlist-close-btn" id="closeShortlistBtn" aria-label="Close shortlist">✕</button>
+    </div>
+
+    <div class="shortlist-body" id="shortlistBody">
+      <!-- Populated via JS -->
+      <div class="shortlist-empty-state" id="shortlistEmptyState">
+        <div class="empty-heart-icon">♡</div>
+        <p class="empty-title">Your Shortlist is Empty</p>
+        <p class="empty-sub">Click the heart icon on any Lippan art creation to save and compare your favorites together.</p>
+        <a href="#artworks" class="btn btn-outline btn-sm" id="emptyBrowseBtn">Explore Artworks</a>
+      </div>
+      <div class="shortlist-items-list" id="shortlistItemsList"></div>
+    </div>
+
+    <div class="shortlist-footer" id="shortlistFooter" style="display: none;">
+      <div class="shortlist-summary-row">
+        <span>Combined Portfolio Value:</span>
+        <strong id="shortlistTotalVal">₹0</strong>
+      </div>
+      <p class="shortlist-policy-mini">✦ COD Available • Direct artist payment on 9983466388 • Non-Refundable</p>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-block" id="shortlistWhatsappBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Enquire All Shortlisted on WhatsApp
+      </a>
+    </div>
+  </aside>
+
+  <!-- ✦ SMART MOBILE BOTTOM STICKY BAR -->
+  <div class="mobile-sticky-action-bar" id="mobileStickyBar">
+    <a href="#artworks" class="sticky-nav-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Gallery</span>
+    </a>
+    <button type="button" class="sticky-nav-item" id="mobileBarShortlistBtn">
+      <div class="sticky-icon-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="mobile-bar-badge" id="mobileBarBadge">0</span>
+      </div>
+      <span>Saved</span>
+    </button>
+    <a href="tel:9983466388" class="sticky-nav-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Call</span>
+    </a>
+    <a href="https://wa.me/919983466388?text=Hello%20Ashima,%20I%20am%20interested%20in%20Shridaa%20Arts%20Lippan%20Artworks." target="_blank" rel="noopener noreferrer" class="sticky-cta-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      WhatsApp
+    </a>
+  </div>
 
   <!-- Scripts -->
   <script src="js/app.js"></script>
