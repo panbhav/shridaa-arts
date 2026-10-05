@@ -88,7 +88,7 @@ async function handleAdminLogin(e) {
   const btn = document.getElementById('adminLoginBtn');
 
   try {
-    btn.disabled = true;
+    if (btn) btn.disabled = true;
     if (statusEl) {
       statusEl.textContent = 'Verifying credentials...';
       statusEl.className = 'admin-login-status';
@@ -148,7 +148,7 @@ async function handleAdminLogin(e) {
     }
     showToast(err.message || 'Login failed', 'error');
   } finally {
-    btn.disabled = false;
+    if (btn) btn.disabled = false;
   }
 }
 
@@ -510,7 +510,7 @@ function closeAdminModal() {
 async function handleAdminArtworkFormSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('adminArtworkForm');
-  const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn');
+  const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn') || (form ? form.querySelector('button[type="submit"]') : null);
   const isEditing = Boolean(window.ShridaaAdmin.editingId);
   const formData = new FormData(form);
 
