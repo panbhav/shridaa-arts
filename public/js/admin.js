@@ -510,13 +510,15 @@ function closeAdminModal() {
 async function handleAdminArtworkFormSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('adminArtworkForm');
-  const saveBtn = document.getElementById('adminSaveBtn');
+  const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn');
   const isEditing = Boolean(window.ShridaaAdmin.editingId);
   const formData = new FormData(form);
 
   try {
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving...';
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+    }
 
     const newArtData = {
       name: formData.get('name').trim(),
@@ -579,8 +581,10 @@ async function handleAdminArtworkFormSubmit(e) {
   } catch (err) {
     showToast(err.message, 'error');
   } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Save Artwork';
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Artwork';
+    }
   }
 }
 
