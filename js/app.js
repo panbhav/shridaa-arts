@@ -421,15 +421,29 @@ function updateShortlistBadge() {
   
   // Header badge
   const headerCount = document.getElementById('shortlistCount');
-  if (headerCount) headerCount.textContent = count;
+  if (headerCount) {
+    headerCount.textContent = count;
+    headerCount.style.display = count > 0 ? 'flex' : 'none';
+  }
   
   // Mobile bar badge
   const mobileBarBadge = document.getElementById('mobileBarBadge');
-  if (mobileBarBadge) mobileBarBadge.textContent = count;
+  if (mobileBarBadge) {
+    mobileBarBadge.textContent = count;
+    mobileBarBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  // Mobile drawer counter
+  const mobileCounter = document.getElementById('mobileShortlistCounter');
+  if (mobileCounter) {
+    mobileCounter.textContent = `${count} Saved`;
+  }
   
   // Drawer count badge
   const drawerCount = document.getElementById('shortlistCountBadge');
-  if (drawerCount) drawerCount.textContent = `${count} ${count === 1 ? 'Artwork' : 'Artworks'}`;
+  if (drawerCount) {
+    drawerCount.textContent = `${count} ${count === 1 ? 'Artwork' : 'Artworks'}`;
+  }
 }
 
 function openShortlist() {

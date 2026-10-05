@@ -510,7 +510,7 @@ function closeAdminModal() {
 async function handleAdminArtworkFormSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('adminArtworkForm');
-  const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn');
+  const saveBtn = document.getElementById('adminSaveArtworkBtn');
   const isEditing = Boolean(window.ShridaaAdmin.editingId);
   const formData = new FormData(form);
 
