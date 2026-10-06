@@ -62,7 +62,8 @@
     #prepare;
     #notify;
     #previews = new Map();
-    constructor({ fetch: transport = globalThis.fetch, prepare = prepareImage, onPublished = () => {} } = {}) { this.#fetch = transport; this.#prepare = prepare; this.#notify = onPublished; }
+    // Call native fetch through its global object, never with Publisher as `this`.
+    constructor({ fetch: transport = (url, options) => globalThis.fetch(url, options), prepare = prepareImage, onPublished = () => {} } = {}) { this.#fetch = transport; this.#prepare = prepare; this.#notify = onPublished; }
     disconnect() {
       this.#token = ''; this.#head = ''; this.#tree = ''; this.#items = [];
       for (const url of this.#previews.values()) URL.revokeObjectURL(url);

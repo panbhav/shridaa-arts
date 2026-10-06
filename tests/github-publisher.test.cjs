@@ -2,6 +2,18 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {Publisher,validate}=require('../public/js/github-publisher.js');
 const fixture=[{id:'art-test',slug:'test',name:'Test',category:'Wall Art',price:100,originalPrice:200,availability:'Available',image:'assets/artworks/test.jpg',gallery:[],isPriceVisible:true}];
+test('default transport preserves the browser fetch receiver',async()=>{
+  const originalFetch=globalThis.fetch;let called=false;
+  globalThis.fetch=async function(){
+    assert.equal(this,globalThis,'Native browser fetch must not receive Publisher as its receiver');
+    called=true;return {ok:true,json:async()=>({permissions:{push:false}})};
+  };
+  try {
+    const publisher=new Publisher();
+    await assert.rejects(publisher.connect('test-only-token'),/cannot write/);
+    assert.ok(called);
+  } finally {globalThis.fetch=originalFetch;}
+});
 function mock({denied=false,race=false}={}) {
   const calls=[]; let head='head-1', stored=structuredClone(fixture), staged, count=0;
   const notifications=[];
