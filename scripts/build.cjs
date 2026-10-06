@@ -34,7 +34,22 @@ for (const name of fs.readdirSync(output)) fs.rmSync(path.join(output,name), { r
 fs.cpSync(src, output,{recursive:true});
 if (fs.existsSync(path.join(storage,'uploads'))) fs.cpSync(path.join(storage,'uploads'),path.join(output,'assets/uploads'),{recursive:true});
 for (const art of items) { const folder=path.join(output,'artwork',art.slug); fs.mkdirSync(folder,{recursive:true}); fs.writeFileSync(path.join(folder,'index.html'),artworkPage(publicArtwork(art))); }
-// Explicit static-mode behavior: no browser-only CMS and no pretend enquiry submission.
+// Static publishing uses GitHub; customers contact the studio directly.
 const htmlFile=path.join(output,'index.html');
-fs.writeFileSync(htmlFile,fs.readFileSync(htmlFile,'utf8').replace('<body class="site-body">','<body class="site-body" data-static-site="true">'));
-console.log(`Built ${items.length} artworks and detail pages in dist/. Deploy public + Node for the CMS, or dist/ for a static portfolio.`);
+let html=fs.readFileSync(htmlFile,'utf8').replace('<body class="site-body">','<body class="site-body" data-static-site="true">');
+html=html.replace('Your message will be saved in the studio inbox. You can also contact Ashima directly on WhatsApp.','Contact Ashima directly on WhatsApp or email to discuss an artwork or custom order.');
+html=html.replace(/<form id="contactForm"[\s\S]*?<\/form>/,'<a class="btn btn-whatsapp" href="https://wa.me/919983466388" target="_blank" rel="noopener">Send your enquiry on WhatsApp</a>');
+fs.writeFileSync(htmlFile,html);
+const adminFile=path.join(output,'admin/index.html');
+let admin=fs.readFileSync(adminFile,'utf8').replace('<body class="site-body">','<body class="site-body" data-admin-mode="github">');
+admin=admin.replace('Welcome Ashima! Sign in to manage artwork information, update prices, or add new creations.','Connect to GitHub to add photographs, edit artwork details and publish your changes.');
+// Match CRLF sources as well as LF sources.
+admin=admin.replace(/<div class="form-group">(\s*<label for="adminUser">Username<\/label>)/,'<div class="form-group" hidden>$1');
+admin=admin.replace('<label for="adminPass">Password</label>','<label for="adminPass">GitHub repository access token</label>');
+admin=admin.replace('placeholder="Enter studio password"','placeholder="Paste your GitHub access token" autocomplete="off" spellcheck="false"');
+admin=admin.replace('Sign In to Studio Manager','Connect to GitHub');
+admin=admin.replace('aria-label="Show password" title="Show/Hide password"','aria-label="Show token" title="Show/Hide token"');
+admin=admin.replace('<div class="admin-login-footer text-center">',`<div class="admin-login-footer text-center"><p>Use a fine-grained token for <strong>panbhav/shridaa-arts</strong> with <strong>Contents: Read and write</strong>. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a token</a>.</p><p>Your token stays in this tab's memory. Connect again after closing or refreshing the page. Each save starts a website rebuild once GitHub Actions publishing is configured.</p>`);
+admin=admin.replace(/  <section class="container section" id="enquiryInbox"[^\n]*\r?\n/,'');
+fs.writeFileSync(adminFile,admin);
+console.log(`Built ${items.length} artworks and detail pages in dist/, including the GitHub publishing admin.`);

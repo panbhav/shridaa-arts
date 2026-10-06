@@ -112,6 +112,10 @@
 
         <!-- Admin Authenticated Dashboard -->
         <div class="admin-dashboard-wrapper" id="adminDashboard" style="display: none;">
+          <div id="publishStatus" hidden aria-live="polite" style="padding:1rem; margin-bottom:1rem; background:var(--bg-surface); border-radius:8px;">
+            <p id="publishMessage"></p>
+            <a id="publishCommit" target="_blank" rel="noopener">View saved commit</a> · <a id="publishProgress" target="_blank" rel="noopener">Check publishing progress</a>
+          </div>
           <div class="admin-dash-header">
             <div>
               <span class="section-label">Studio Content Management</span>
@@ -156,6 +160,7 @@
               <button type="button" class="btn btn-outline" id="exportBackupBtn">
                 Export Backup JSON
               </button>
+              <button type="button" class="btn btn-outline" id="reloadCatalogueBtn">Reload Catalogue</button>
             </div>
           </div>
 
@@ -285,6 +290,7 @@
 
   <!-- Scripts -->
   <script src="js/ui.js"></script>
+  <script src="js/github-publisher.js"></script>
   <script src="js/admin.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {

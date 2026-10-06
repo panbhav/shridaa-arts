@@ -31,3 +31,20 @@ test('shortlist WhatsApp query preserves special characters without hidden price
   const url=new URL(nodes.shortlistWhatsappBtn.href);const message=url.searchParams.get('text');
   assert.ok(message.includes('Artist & Mirror #1'));assert.ok(message.includes('Price on Request'));assert.ok(!message.includes('500'));assert.ok(!nodes.shortlistTotalVal.textContent.includes('500'));
 });
+
+test('static admin routes login to GitHub without storing the credential or requesting an inbox',async()=>{
+  const nodes={};const requests=[];const stored=[];let disconnected=false;
+  for(const id of ['adminLoginBtn','adminLoginStatus','adminUser','adminPass','adminLoginBox','adminDashboard','adminSearchInput','adminTableBody'])nodes[id]={style:{},value:'',replaceChildren:()=>{}};
+  nodes.adminPass.value='test-only-token';
+  class Publisher {
+    async request(url,options){requests.push({url,options});if(url.endsWith('/login'))return {token:'github-connected'};if(url.endsWith('/artworks'))return {artworks:[]};return {valid:true};}
+    disconnect(){disconnected=true;}
+  }
+  const context=vm.createContext({window:{ShridaaGitHubPublisher:{Publisher}},document:{body:{dataset:{adminMode:'github'}},addEventListener:()=>{},getElementById:id=>nodes[id]},sessionStorage:{getItem:()=>{throw new Error('Must not read stored credentials');},setItem:(...args)=>stored.push(args),removeItem:()=>{}},localStorage:{removeItem:()=>{}},FormData,console,setTimeout});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'../public/js/admin.js'),'utf8'),context);
+  await vm.runInContext('handleAdminLogin({preventDefault(){}})',context);
+  assert.equal(JSON.parse(requests[0].options.body).password,'test-only-token');
+  assert.equal(nodes.adminPass.value,'');assert.equal(stored.length,0);assert.equal(nodes.adminDashboard.style.display,'block');
+  assert.ok(!requests.some(r=>r.url.includes('enquiries')));
+  vm.runInContext('logoutAdmin()',context);assert.ok(disconnected);assert.equal(context.window.ShridaaAdmin.token,null);
+});

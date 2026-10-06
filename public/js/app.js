@@ -1217,7 +1217,6 @@ document.addEventListener('click', event => {
 });
 document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.staticSite === 'true') {
-    document.querySelectorAll('a[href="admin/"]').forEach(a => a.hidden = true);
     const form = document.getElementById('contactForm');
     if (form) { form.hidden = true; const link=document.createElement('a'); link.className='btn btn-whatsapp'; link.href='https://wa.me/919983466388'; link.textContent='Send your enquiry on WhatsApp'; form.after(link); }
   }

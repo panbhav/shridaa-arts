@@ -1,8 +1,17 @@
 /**
  * Shridaa Arts — Studio Admin CMS Panel Logic
  * Secure, simple management for Ashima Goyal
- * Supports both Live Server Mode and Static GitHub Pages Demo Mode
+ * Supports Node-hosted CMS and GitHub-backed static publishing.
  */
+
+const githubMode = document.body.dataset.adminMode === 'github';
+const githubPublisher = githubMode ? new window.ShridaaGitHubPublisher.Publisher({onPublished: publication => {
+  const status = document.getElementById('publishStatus');
+  status.hidden = false;
+  document.getElementById('publishMessage').textContent = 'Saved to GitHub. The website rebuild is pending; check publishing progress below.';
+  document.getElementById('publishCommit').href = publication.commitUrl;
+  document.getElementById('publishProgress').href = publication.actionsUrl;
+}}) : null;
 
 window.ShridaaAdmin = {
   token: getAdminToken(),
@@ -43,9 +52,11 @@ async function handleAdminLogin(e) {
   const status = document.getElementById('adminLoginStatus');
   btn.disabled = true;
   try {
-    const data = await adminRequest('api/admin/login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('adminUser').value.trim(), password: document.getElementById('adminPass').value }) });
+    const password = document.getElementById('adminPass').value;
+    document.getElementById('adminPass').value = '';
+    const data = await adminRequest('api/admin/login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('adminUser').value.trim(), password }) });
     window.ShridaaAdmin.token = data.token;
-    try { sessionStorage.setItem('shridaa_admin_token', data.token); localStorage.removeItem('shridaa_admin_token'); localStorage.removeItem('shridaa_local_artworks'); } catch {}
+    try { if (!githubMode) sessionStorage.setItem('shridaa_admin_token', data.token); localStorage.removeItem('shridaa_admin_token'); localStorage.removeItem('shridaa_local_artworks'); } catch {}
     document.getElementById('adminPass').value = '';
     status.textContent = ''; await checkAdminSession();
   } catch (err) { status.textContent = err.message; status.className = 'admin-login-status error'; }
@@ -54,6 +65,9 @@ async function handleAdminLogin(e) {
 
 // Admin Logout
 function logoutAdmin() {
+  githubPublisher?.disconnect();
+  window.ShridaaAdmin.artworks = [];
+  document.getElementById('adminTableBody').replaceChildren();
   window.ShridaaAdmin.token = null;
   try { sessionStorage.removeItem('shridaa_admin_token'); localStorage.removeItem('shridaa_admin_token'); } catch {}
   showAdminLogin();
@@ -100,7 +114,7 @@ function renderAdminTable(filterQuery = '') {
 
   tbody.innerHTML = list.map(raw => {
     const art = window.ShridaaUI.htmlArtwork(raw);
-    const imgUrl = art.fallbackImage || art.image;
+    const imgUrl = adminImage(raw.fallbackImage || raw.image);
     const isAvail = art.availability === 'Available';
     const isFeat = art.featured === true;
 
@@ -189,7 +203,7 @@ async function toggleFeatured(artworkId) {
 async function deleteArtwork(artworkId) {
   const art = window.ShridaaAdmin.artworks.find(a => a.id === artworkId);
   if (!confirm('Remove ' + art.name + ' from the portfolio?')) return;
-  try { await adminRequest('api/admin/artworks/' + encodeURIComponent(artworkId),{method:'DELETE'}); await loadAdminDashboardData(); showToast('Artwork removed from the server','success'); }
+  try { await adminRequest('api/admin/artworks/' + encodeURIComponent(artworkId),{method:'DELETE'}); await loadAdminDashboardData(); showToast(githubMode ? 'Removal saved to GitHub; website rebuild pending' : 'Artwork removed from the server','success'); }
   catch(err) { showToast(err.message,'error'); }
 }
 
@@ -288,7 +302,7 @@ function openEditArtworkModal(artworkId) {
     preview.style.display = 'block';
     preview.innerHTML = `
       <small class="text-muted">Current Artwork Photo:</small><br>
-      <img src="${window.ShridaaUI.escapeHtml(window.ShridaaUI.safeImage(art.fallbackImage || art.image))}" alt="${window.ShridaaUI.escapeHtml(art.name)}">
+      <img src="${adminImage(art.fallbackImage || art.image)}" alt="${window.ShridaaUI.escapeHtml(art.name)}">
     `;
   }
 
@@ -314,7 +328,7 @@ async function handleAdminArtworkFormSubmit(e) {
   try {
     const id=window.ShridaaAdmin.editingId;
     await adminRequest('api/admin/artworks' + (id ? '/' + encodeURIComponent(id) : ''), {method:id ? 'PUT' : 'POST',body:data});
-    await loadAdminDashboardData(); closeAdminModal(); showToast('Artwork saved to the server','success');
+    await loadAdminDashboardData(); closeAdminModal(); showToast(githubMode ? 'Saved to GitHub; website rebuild pending' : 'Artwork saved to the server','success');
   } catch(err) { showToast(err.message,'error'); }
   finally {saveBtn.disabled=false;saveBtn.textContent='Save Artwork';}
 }
@@ -361,8 +375,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const eyeHide = togglePassBtn.querySelector('.eye-hide');
       if (eyeShow) eyeShow.style.display = isPass ? 'none' : 'block';
       if (eyeHide) eyeHide.style.display = isPass ? 'block' : 'none';
-      togglePassBtn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
-      togglePassBtn.setAttribute('title', isPass ? 'Hide password' : 'Show password');
+      const credential = githubMode ? 'token' : 'password';
+      togglePassBtn.setAttribute('aria-label', (isPass ? 'Hide ' : 'Show ') + credential);
+      togglePassBtn.setAttribute('title', (isPass ? 'Hide ' : 'Show ') + credential);
     });
   }
 
@@ -402,12 +417,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (artworkForm) artworkForm.addEventListener('submit', handleAdminArtworkFormSubmit);
 });
 
-function getAdminToken() { try {return sessionStorage.getItem('shridaa_admin_token') || null;} catch {return null;} }
+function getAdminToken() { if (githubMode) return null; try {return sessionStorage.getItem('shridaa_admin_token') || null;} catch {return null;} }
+function adminImage(path) { return window.ShridaaUI.escapeHtml(githubPublisher ? githubPublisher.previewImage(window.ShridaaUI.safeImage(path)) : window.ShridaaUI.safeImage(path)); }
 function showAdminLogin() {
   document.getElementById('adminLoginBox').style.display='block'; document.getElementById('adminDashboard').style.display='none';
   const inbox=document.getElementById('enquiryInbox'); if(inbox) inbox.hidden=true;
 }
 async function adminRequest(url,options={}) {
+  if (githubPublisher) return githubPublisher.request(url,options);
   const headers={...(options.body instanceof FormData ? {} : {'Content-Type':'application/json'}), ...(window.ShridaaAdmin.token ? {Authorization:'Bearer '+window.ShridaaAdmin.token} : {}),...options.headers};
   let response;
   try {response=await fetch(url,{...options,headers,cache:'no-store'});} catch {throw new Error('Cannot reach the studio server. No changes were saved.');}
@@ -417,10 +434,11 @@ async function adminRequest(url,options={}) {
   return data;
 }
 async function saveQuick(id,patch,message) {
-  try {await adminRequest('api/admin/artworks/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(patch)});await loadAdminDashboardData();showToast(message,'success');}
+  try {await adminRequest('api/admin/artworks/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(patch)});await loadAdminDashboardData();showToast(githubMode ? message + ' to GitHub; website rebuild pending' : message,'success');}
   catch(err) {showToast(err.message,'error');}
 }
 async function loadEnquiries() {
+  if (githubMode) return;
   const section=document.getElementById('enquiryInbox'); if(!section) return;
   const data=await adminRequest('api/admin/enquiries');
   section.hidden=false;
@@ -440,3 +458,4 @@ document.addEventListener('click',async event=>{
 });
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('refreshEnquiriesBtn')?.addEventListener('click',()=>loadEnquiries().catch(err=>showToast(err.message,'error')));});
 document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeAdminModal(); });
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('reloadCatalogueBtn')?.addEventListener('click',()=>loadAdminDashboardData().then(()=>showToast('Latest catalogue loaded')).catch(err=>showToast(err.message,'error')));});

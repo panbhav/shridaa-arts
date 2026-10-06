@@ -14,6 +14,8 @@ async function request(url,options={},authenticated=false) {
 }
 before(async()=>{
   storage=fs.mkdtempSync(path.join(os.tmpdir(),'shridaa-test-'));
+  // Fixtures must remain stable when the artist edits the real catalogue.
+  fs.writeFileSync(path.join(storage,'artworks.json'),JSON.stringify([{id:'art-001',slug:'swarna-mandala-mirror',name:'Test Mirror',category:'Wall Mirrors',price:3499,originalPrice:3999,currency:'INR',availability:'Available',featured:true,isPriceVisible:true,image:'assets/artworks/swarna-mandala-mirror.jpg',gallery:[],size:'12 inches',shortDescription:'Test artwork'}]));
   const app=createApp({storageDir:storage,username:'test-admin',password,secret:'test-only-secret-'.repeat(4)});
   server=app.listen(0,'127.0.0.1');
   await new Promise(resolve=>server.once('listening',resolve));base='http://127.0.0.1:'+server.address().port;
@@ -24,7 +26,7 @@ after(async()=>{server.closeAllConnections();await new Promise(resolve=>server.c
 test('configuration rejects published defaults',()=>assert.throws(()=>createApp({storageDir:storage,username:'admin',password:'admin123',secret:'secret'}),/Secure admin configuration/));
 test('public catalogue and canonical JSON agree',async()=>{
   const api=await request('/api/artworks');const json=await request('/data/artworks.json');
-  assert.equal(api.status,200);assert.deepEqual(api.body.artworks,json.body);assert.equal(api.body.total,27);
+  assert.equal(api.status,200);assert.deepEqual(api.body.artworks,json.body);assert.equal(api.body.total,1);
 });
 test('private files and missing assets have real 404 responses',async()=>{
   for(const file of ['/server.js','/package.json','/.env','/data/enquiries.json','/missing.css','/unknown/page']) assert.equal((await request(file)).status,404,file);

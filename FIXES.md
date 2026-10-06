@@ -27,11 +27,11 @@ The earlier audit was addressed in the local project. No production deployment o
 | WhatsApp query encoding | Entire dynamic enquiry messages encoded once | Special-character shortlist regression test |
 | SEO | Rendered unique artwork URLs and Product metadata; real-page sitemap; absolute social images | Sitemap/template tests and generated page opened in browser |
 | Unverified content and counts | Unsupported testimonials withheld; counts are dynamic; business email consistent | Source review and visible catalogue count |
-| No release checks | npm run check runs syntax, regression tests and complete static build | 18 regression tests and build passed |
+| No release checks | npm run check runs syntax, regression tests and complete static build | Regression tests and build passed |
 
 ## Remaining configuration before production
 
-- Deploy the Node server with persistent STORAGE_DIR for a working CMS. GitHub Pages can host only the generated static portfolio.
+- For the lightweight CMS, publish the GitHub Actions workflow on main and set Pages to GitHub Actions. The static admin publishes catalogue/photos through an owner-provided repository token; customers use direct WhatsApp/email. No Node hosting is required. See README.md for setup.
 - Credentials were rotated in private `.env`; old published defaults no longer work. Protect that file and set environment values privately on the host.
 - Configure a trusted ENQUIRY_WEBHOOK_URL only if automatic notification is wanted. Without it, enquiries remain available in the Studio inbox, and the customer is accurately told this.
 - Testimonials should only be restored after the owner verifies their provenance.
