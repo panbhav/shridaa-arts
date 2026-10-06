@@ -445,6 +445,43 @@ async function deleteArtwork(artworkId) {
   if (window.ShridaaApp && window.ShridaaApp.renderAll) window.ShridaaApp.renderAll();
 }
 
+// Helper to read, scale, and compress uploaded photo for fast loading and storage
+function readAndOptimizeImage(file) {
+  return new Promise((resolve) => {
+    if (!file || !file.type.startsWith('image/')) {
+      return resolve(null);
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 800;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 // Open Add Artwork Modal
 function openAddArtworkModal() {
   window.ShridaaAdmin.editingId = null;
@@ -452,10 +489,15 @@ function openAddArtworkModal() {
   const heading = document.getElementById('adminModalHeading');
   const form = document.getElementById('adminArtworkForm');
   const preview = document.getElementById('formArtCurrentImgPreview');
+  const fileInput = document.getElementById('formArtImageFile');
 
   if (heading) heading.textContent = 'Add New Artwork';
   if (form) form.reset();
-  if (preview) preview.style.display = 'none';
+  if (fileInput) fileInput.value = '';
+  if (preview) {
+    preview.style.display = 'none';
+    preview.innerHTML = '';
+  }
 
   document.getElementById('editArtworkId').value = '';
   document.getElementById('formArtAvailability').value = 'Available';
@@ -474,8 +516,10 @@ function openEditArtworkModal(artworkId) {
   const modal = document.getElementById('adminArtworkModal');
   const heading = document.getElementById('adminModalHeading');
   const preview = document.getElementById('formArtCurrentImgPreview');
+  const fileInput = document.getElementById('formArtImageFile');
 
   if (heading) heading.textContent = `Edit "${art.name}"`;
+  if (fileInput) fileInput.value = '';
 
   document.getElementById('editArtworkId').value = art.id;
   document.getElementById('formArtName').value = art.name;
@@ -513,11 +557,17 @@ async function handleAdminArtworkFormSubmit(e) {
   const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn') || (form ? form.querySelector('button[type="submit"]') : null);
   const isEditing = Boolean(window.ShridaaAdmin.editingId);
   const formData = new FormData(form);
+  const fileInput = document.getElementById('formArtImageFile');
 
   try {
     if (saveBtn) {
       saveBtn.disabled = true;
       saveBtn.textContent = 'Saving...';
+    }
+
+    let uploadedDataUrl = null;
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      uploadedDataUrl = await readAndOptimizeImage(fileInput.files[0]);
     }
 
     const newArtData = {
@@ -537,23 +587,33 @@ async function handleAdminArtworkFormSubmit(e) {
     if (isEditing) {
       const artIndex = window.ShridaaAdmin.artworks.findIndex(a => a.id === window.ShridaaAdmin.editingId);
       if (artIndex !== -1) {
+        const existing = window.ShridaaAdmin.artworks[artIndex];
+        const finalImg = uploadedDataUrl || existing.fallbackImage || existing.image;
         window.ShridaaAdmin.artworks[artIndex] = {
-          ...window.ShridaaAdmin.artworks[artIndex],
-          ...newArtData
+          ...existing,
+          ...newArtData,
+          image: finalImg,
+          fallbackImage: finalImg,
+          gallery: uploadedDataUrl ? [uploadedDataUrl, ...(existing.gallery || [])] : (existing.gallery || [finalImg])
         };
       }
       if (window.ShridaaApp && window.ShridaaApp.artworks) {
         const appIndex = window.ShridaaApp.artworks.findIndex(a => a.id === window.ShridaaAdmin.editingId);
         if (appIndex !== -1) {
+          const existing = window.ShridaaApp.artworks[appIndex];
+          const finalImg = uploadedDataUrl || existing.fallbackImage || existing.image;
           window.ShridaaApp.artworks[appIndex] = {
-            ...window.ShridaaApp.artworks[appIndex],
-            ...newArtData
+            ...existing,
+            ...newArtData,
+            image: finalImg,
+            fallbackImage: finalImg,
+            gallery: uploadedDataUrl ? [uploadedDataUrl, ...(existing.gallery || [])] : (existing.gallery || [finalImg])
           };
         }
       }
     } else {
       const newId = `art-${String(window.ShridaaAdmin.artworks.length + 1).padStart(3, '0')}`;
-      const defaultImg = 'Assets/artworks/swarna-mandala-mirror.webp';
+      const defaultImg = uploadedDataUrl || 'Assets/artworks/swarna-mandala-mirror.webp';
       const createdItem = {
         id: newId,
         slug: newArtData.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'),
@@ -562,7 +622,7 @@ async function handleAdminArtworkFormSubmit(e) {
         isHandmade: true,
         displayOrder: window.ShridaaAdmin.artworks.length + 1,
         image: defaultImg,
-        fallbackImage: 'Assets/artworks/swarna-mandala-mirror.jpg',
+        fallbackImage: defaultImg,
         gallery: [defaultImg],
         ...newArtData
       };
@@ -643,6 +703,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (adminSearch) {
     adminSearch.addEventListener('input', (e) => {
       renderAdminTable(e.target.value);
+    });
+  }
+
+  // Image File Change Listener for instant preview
+  const artImageInput = document.getElementById('formArtImageFile');
+  if (artImageInput) {
+    artImageInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      const preview = document.getElementById('formArtCurrentImgPreview');
+      if (file && preview) {
+        const reader = new FileReader();
+        reader.onload = (loadEvt) => {
+          preview.style.display = 'block';
+          preview.innerHTML = `
+            <small style="color: var(--color-terracotta); font-weight: 700; display: block; margin-bottom: 4px;">✓ New Photo Selected:</small>
+            <img src="${loadEvt.target.result}" alt="New Photo Preview" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--color-terracotta);">
+          `;
+        };
+        reader.readAsDataURL(file);
+      }
     });
   }
 

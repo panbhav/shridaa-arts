@@ -265,7 +265,13 @@
           <textarea id="formArtDetailedDesc" name="detailedDescription" class="form-control" rows="3" placeholder="Tell the story, cultural significance, and mirror work technique..."></textarea>
         </div>
 
-        <div id="formArtCurrentImgPreview" class="admin-img-preview-box" style="display: none; margin-bottom: 1rem;"></div>
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label for="formArtImageFile">Upload Artwork Photograph (Camera or Gallery)</label>
+          <input type="file" id="formArtImageFile" name="imageFile" class="form-control" accept="image/jpeg,image/png,image/webp,image/jpg">
+          <small class="form-hint">Supports high-res JPEG, PNG, or WebP. Choose from device gallery or camera.</small>
+          <div id="formArtCurrentImgPreview" class="current-img-preview" style="display: none; margin-top: 0.75rem;"></div>
+        </div>
 
         <div class="modal-form-actions">
           <button type="button" class="btn btn-secondary" id="adminCancelBtn">Cancel</button>
@@ -279,7 +285,7 @@
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- Scripts -->
-  <script src="js/admin.js?v=20261005_v5"></script>
+  <script src="js/admin.js?v=20261006_img"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (window.ShridaaAdmin && window.ShridaaAdmin.checkSession) {
