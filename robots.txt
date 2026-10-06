@@ -5,13 +5,14 @@
 
 User-agent: *
 Allow: /
-Allow: /Assets/
+Allow: /assets/
 Allow: /css/
 Allow: /js/
 Allow: /data/
 
 # Protect Private Administrative Management Panel from Crawlers
 Disallow: /admin/
+Disallow: /admin.html
 Disallow: /api/admin/
 
 # Sitemaps

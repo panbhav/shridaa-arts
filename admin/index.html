@@ -17,7 +17,7 @@
   <style>
     .admin-standalone-header {
       background: var(--bg-card);
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--color-border-subtle);
       padding: 1.25rem 0;
       margin-bottom: 2rem;
     }
@@ -37,7 +37,7 @@
       padding: 0.5rem 1rem;
       border-radius: var(--radius-sm);
       background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--color-border-subtle);
       transition: all var(--transition-fast);
     }
     .admin-back-btn:hover {
@@ -247,7 +247,7 @@
             Mark as Featured Creation (Shows in curated homepage section)
           </label>
           <label class="checkbox-label">
-            <input type="checkbox" id="formArtCustomizable" name="customizable" checked>
+            <input type="checkbox" id="formArtCustomizable" name="isCustomizable" checked>
             Open for Custom Dimensions / Palette
           </label>
         </div>
@@ -262,6 +262,7 @@
           <textarea id="formArtDetailedDesc" name="detailedDescription" class="form-control" rows="3" placeholder="Tell the story, cultural significance, and mirror work technique..."></textarea>
         </div>
 
+        <label class="checkbox-label"><input type="checkbox" id="formArtPriceVisible" name="isPriceVisible" checked> Show price publicly</label>
         <!-- Image Upload -->
         <div class="form-group">
           <label for="formArtImageFile">Upload Artwork Photograph (Camera or Gallery)</label>
@@ -278,11 +279,13 @@
     </div>
   </div>
 
+  <section class="container section" id="enquiryInbox" hidden><h2>Studio enquiry inbox</h2><button type="button" class="btn btn-secondary" id="refreshEnquiriesBtn">Refresh inbox</button><div id="enquiryInboxList" aria-live="polite"></div></section>
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- Scripts -->
-  <script src="js/admin.js?v=20261006_img"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/admin.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (window.ShridaaAdmin && window.ShridaaAdmin.checkSession) {

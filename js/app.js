@@ -15,7 +15,7 @@ window.ShridaaApp = {
   selectedArtwork: null,
   lightboxImages: [],
   lightboxIndex: 0,
-  shortlist: JSON.parse(localStorage.getItem('shridaa_shortlist') || '[]')
+  shortlist: window.ShridaaUI.storedArray('shridaa_shortlist')
 };
 
 // Utilities
@@ -52,6 +52,7 @@ function generateArtworkWhatsAppUrl(artwork) {
 
 // Data Fetching & Rendering
 function renderAll() {
+  const countEl = document.getElementById("heroArtworkCount"); if (countEl) countEl.textContent = window.ShridaaApp.artworks.length;
   // Filter featured
   window.ShridaaApp.featuredArtworks = window.ShridaaApp.artworks.filter(a => a.featured);
 
@@ -68,11 +69,22 @@ function renderAll() {
   }));
 
   // Update hero price from Swarna Mandala Mirror if found
-  const swarna = window.ShridaaApp.artworks.find(a => a.slug === 'swarna-mandala-mirror' || a.id === 'art-001');
+  const swarna = window.ShridaaApp.artworks.find(a => a.slug === 'swarna-mandala-mirror' || a.id === 'art-001') || window.ShridaaApp.featuredArtworks[0] || window.ShridaaApp.artworks[0];
+  const heroCard = document.querySelector('.hero-image-card');
+  if (heroCard) heroCard.hidden = !swarna;
   if (swarna) {
     const heroPriceEl = document.getElementById('heroFeaturedPrice');
     if (heroPriceEl) {
       heroPriceEl.textContent = formatPrice(swarna.price, swarna.currency, swarna.isPriceVisible);
+    }
+    const title = document.querySelector('.hero-artwork-badge .artwork-title');
+    if (title) title.textContent = swarna.name;
+    const picture = document.querySelector('.hero-image-wrapper picture');
+    if (picture) {
+      const source = picture.querySelector('source');
+      if (source) { source.srcset = window.ShridaaUI.safeImage(swarna.image); source.type = swarna.image.endsWith('.webp') ? 'image/webp' : swarna.image.endsWith('.png') ? 'image/png' : 'image/jpeg'; }
+      const image = picture.querySelector('img');
+      if (image) { image.src = window.ShridaaUI.safeImage(swarna.fallbackImage || swarna.image); image.alt = swarna.name; }
     }
   }
 
@@ -85,79 +97,54 @@ function renderAll() {
 
 async function loadArtworksData() {
   try {
-    // Check if user has saved updated artworks locally in browser
-    const localSaved = localStorage.getItem('shridaa_local_artworks');
-    if (localSaved) {
-      try {
-        const parsed = JSON.parse(localSaved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          window.ShridaaApp.artworks = parsed;
-          renderAll();
-          handleRoute();
-          return;
-        }
-      } catch (e) {
-        console.warn('Could not parse local artworks:', e);
-      }
-    }
-
-    let response;
-    let data;
-    try {
-      response = await fetch('api/artworks');
-      if (!response.ok) response = await fetch('/api/artworks');
-      if (!response.ok) throw new Error('API unavailable');
-      data = await response.json();
-      window.ShridaaApp.artworks = data.artworks || data;
-    } catch (e) {
-      // Fallback to static JSON for GitHub Pages & static hosting
-      response = await fetch('data/artworks.json');
-      if (!response.ok) response = await fetch('./data/artworks.json');
-      data = await response.json();
-      window.ShridaaApp.artworks = data.artworks || data;
-    }
-
-    renderAll();
-
-    // Check URL parameters or hash on load
-    handleRoute();
-
+    let response = await fetch(document.body.dataset.staticSite === 'true' ? 'data/artworks.json' : 'api/artworks', { cache: 'no-store' });
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) response = await fetch('data/artworks.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Catalogue unavailable');
+    const data = await response.json();
+    const items = data.artworks || data;
+    if (!Array.isArray(items)) throw new Error('Invalid catalogue');
+    window.ShridaaApp.artworks = items;
+    window.ShridaaApp.shortlist = window.ShridaaApp.shortlist.filter(id => items.some(a => a.id === id));
+    renderAll(); updateShortlistBadge(); handleRoute();
   } catch (err) {
-    console.error('Error loading artworks data:', err);
-    showToast('Failed to load artwork portfolio', 'error');
+    console.error('Unable to load artworks:', err);
+    const count = document.getElementById('resultsCount');
+    if (count) count.textContent = 'Unable to load artworks. Please refresh or contact the studio.';
+    showToast('Could not load the catalogue. Please try again.', 'error');
   }
 }
 
 // Reusable Artwork Card HTML
 function createArtworkCardHtml(artwork) {
+  artwork = window.ShridaaUI.htmlArtwork(artwork);
   const priceDisplay = formatPrice(artwork.price, artwork.currency, artwork.isPriceVisible);
-  const origPriceDisplay = artwork.originalPrice ? formatPrice(artwork.originalPrice) : '';
+  const origPriceDisplay = artwork.isPriceVisible !== false && artwork.originalPrice ? formatPrice(artwork.originalPrice) : '';
   const availClass = artwork.availability === 'Sold' ? 'sold' : (artwork.availability === 'Made to Order' ? 'made-to-order' : '');
   const isShortlisted = window.ShridaaApp.shortlist.includes(artwork.id);
-  
+
   return `
     <article class="artwork-card" data-id="${artwork.id}">
-      <button type="button" 
-              class="card-shortlist-btn ${isShortlisted ? 'active' : ''}" 
-              onclick="event.stopPropagation(); window.ShridaaApp.toggleShortlist('${artwork.id}')" 
+      <button type="button"
+              class="card-shortlist-btn ${isShortlisted ? 'active' : ''}"
+              data-action="shortlist" data-art-id="${artwork.id}"
               aria-label="${isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}"
               title="${isShortlisted ? 'Saved in Shortlist' : 'Add to Shortlist'}">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="${isShortlisted ? '#C59A4E' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
 
-      <div class="artwork-card-img-wrap" onclick="window.ShridaaApp.openDetail('${artwork.id}')">
+      <div class="artwork-card-img-wrap"><a href="artwork/${artwork.slug}/" data-action="detail" data-art-id="${artwork.id}" aria-label="View ${artwork.name}">
         <picture>
-          <source srcset="${artwork.image}" type="image/webp">
-          <img src="${artwork.fallbackImage || artwork.image}" 
-               alt="${artwork.name} - Handmade Lippan Art by Ashima Goyal" 
-               class="artwork-card-img" 
+          ${artwork.image.endsWith(".webp") ? `<source srcset="${artwork.image}" type="image/webp">` : ""}
+          <img src="${artwork.fallbackImage || artwork.image}"
+               alt="${artwork.name} - Handmade Lippan Art by Ashima Goyal"
+               class="artwork-card-img"
                loading="lazy">
-        </picture>
+        </picture></a>
         <span class="availability-badge ${availClass}">${artwork.availability || 'Available'}</span>
         <div class="quick-view-overlay">
           <div class="card-quick-actions">
-            <span class="quick-view-btn">View Details</span>
-            <button type="button" class="wall-preview-btn" onclick="event.stopPropagation(); window.ShridaaApp.openWallVisualizer('${artwork.id}')">
+            <button type="button" class="quick-view-btn" data-action="detail" data-art-id="${artwork.id}">View Details</button>
+            <button type="button" class="wall-preview-btn" data-action="wall" data-art-id="${artwork.id}">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
               ✦ Wall Preview
             </button>
@@ -174,7 +161,7 @@ function createArtworkCardHtml(artwork) {
             ${origPriceDisplay ? `<span class="price-orig">${origPriceDisplay}</span>` : ''}
             <span class="card-shipping-tag">Shipping Excluded</span>
           </div>
-          <button type="button" class="card-details-link" onclick="window.ShridaaApp.openDetail('${artwork.id}')">
+          <button type="button" class="card-details-link" data-action="detail" data-art-id="${artwork.id}">
             View Details →
           </button>
         </div>
@@ -188,8 +175,8 @@ function renderFeaturedArtworks() {
   const container = document.getElementById('featuredGrid');
   if (!container) return;
 
-  const featured = window.ShridaaApp.featuredArtworks.length > 0 
-    ? window.ShridaaApp.featuredArtworks 
+  const featured = window.ShridaaApp.featuredArtworks.length > 0
+    ? window.ShridaaApp.featuredArtworks
     : window.ShridaaApp.artworks.slice(0, 6);
 
   container.innerHTML = featured.map(createArtworkCardHtml).join('');
@@ -200,13 +187,13 @@ function renderCategories() {
   const container = document.getElementById('categoryGrid');
   if (!container) return;
 
-  container.innerHTML = window.ShridaaApp.categories.map(cat => `
-    <div class="category-card" onclick="window.ShridaaApp.filterByCategory('${cat.name}')">
+  container.innerHTML = window.ShridaaApp.categories.map(raw => { const cat={...raw,name:window.ShridaaUI.escapeHtml(raw.name)}; return `
+    <button type="button" class="category-card" data-action="category" data-category="${cat.name}">
       <div class="category-icon">✦</div>
       <h3 class="category-title">${cat.name}</h3>
       <span class="category-count">${cat.count} ${cat.count === 1 ? 'Design' : 'Designs'}</span>
-    </div>
-  `).join('');
+    </button>
+  `; }).join('');
 }
 
 // Render Category Filter Pills on Gallery Page
@@ -220,12 +207,12 @@ function renderCategoryPills() {
   ];
 
   container.innerHTML = pills.map(cat => `
-    <button type="button" 
-            class="category-pill ${window.ShridaaApp.activeCategory === cat.name ? 'active' : ''}" 
-            onclick="window.ShridaaApp.filterByCategory('${cat.name}')" 
-            role="tab" 
+    <button type="button"
+            class="category-pill ${window.ShridaaApp.activeCategory === cat.name ? 'active' : ''}"
+            data-action="category" data-category="${window.ShridaaUI.escapeHtml(cat.name)}"
+            role="tab"
             aria-selected="${window.ShridaaApp.activeCategory === cat.name}">
-      ${cat.name} (${cat.count})
+      ${window.ShridaaUI.escapeHtml(cat.name)} (${cat.count})
     </button>
   `).join('');
 }
@@ -247,7 +234,7 @@ function getFilteredArtworks() {
   // Search Query
   if (window.ShridaaApp.searchQuery) {
     const q = window.ShridaaApp.searchQuery.toLowerCase().trim();
-    list = list.filter(a => 
+    list = list.filter(a =>
       (a.name && a.name.toLowerCase().includes(q)) ||
       (a.category && a.category.toLowerCase().includes(q)) ||
       (a.shortDescription && a.shortDescription.toLowerCase().includes(q)) ||
@@ -289,10 +276,10 @@ function renderFullGallery() {
     countEl.textContent = `Showing ${filtered.length} of ${window.ShridaaApp.artworks.length} creations`;
   }
 
-  const isFiltered = window.ShridaaApp.activeCategory !== 'All' || 
-                     window.ShridaaApp.activeAvailability !== 'All' || 
+  const isFiltered = window.ShridaaApp.activeCategory !== 'All' ||
+                     window.ShridaaApp.activeAvailability !== 'All' ||
                      window.ShridaaApp.searchQuery !== '';
-                     
+
   if (resetBtn) {
     resetBtn.style.display = isFiltered ? 'inline-block' : 'none';
   }
@@ -318,7 +305,7 @@ function openArtworkDetail(artworkId) {
   // Set modal elements
   document.getElementById('modalArtworkTitle').textContent = artwork.name;
   document.getElementById('modalCategory').textContent = artwork.category || 'Lippan Art';
-  
+
   const availEl = document.getElementById('modalAvailability');
   availEl.textContent = artwork.availability || 'Available';
   availEl.className = 'availability-badge ' + (artwork.availability === 'Sold' ? 'sold' : (artwork.availability === 'Made to Order' ? 'made-to-order' : ''));
@@ -326,7 +313,7 @@ function openArtworkDetail(artworkId) {
   document.getElementById('modalPrice').textContent = formatPrice(artwork.price, artwork.currency, artwork.isPriceVisible);
   const origPriceEl = document.getElementById('modalOriginalPrice');
   if (origPriceEl) {
-    origPriceEl.textContent = artwork.originalPrice ? formatPrice(artwork.originalPrice) : '';
+    origPriceEl.textContent = artwork.isPriceVisible !== false && artwork.originalPrice ? formatPrice(artwork.originalPrice) : '';
   }
 
   document.getElementById('modalShortDesc').textContent = artwork.shortDescription || '';
@@ -350,8 +337,8 @@ function openArtworkDetail(artworkId) {
     if (gallery.length > 1) {
       thumbsStrip.style.display = 'flex';
       thumbsStrip.innerHTML = gallery.map((imgSrc, idx) => `
-        <button type="button" class="detail-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="window.ShridaaApp.switchDetailImage('${imgSrc}', ${idx})">
-          <img src="${imgSrc}" class="detail-thumb-img" alt="Thumbnail ${idx + 1}">
+        <button type="button" class="detail-thumb-btn ${idx === 0 ? 'active' : ''}" data-action="image" data-image="${window.ShridaaUI.escapeHtml(window.ShridaaUI.safeImage(imgSrc))}" data-index="${idx}">
+          <img src="${window.ShridaaUI.escapeHtml(window.ShridaaUI.safeImage(imgSrc))}" class="detail-thumb-img" alt="Thumbnail ${idx + 1}">
         </button>
       `).join('');
     } else {
@@ -374,7 +361,7 @@ function openArtworkDetail(artworkId) {
   document.body.style.overflow = 'hidden';
 
   // Push state to URL hash without jumping
-  window.location.hash = `artwork=${artwork.id}`;
+  if (window.location.hash !== `#artwork=${artwork.id}`) history.pushState({ gallery: true }, '', `#artwork=${encodeURIComponent(artwork.id)}`);
 }
 
 function updateModalShortlistBtn(artId) {
@@ -398,11 +385,11 @@ function toggleShortlist(artworkId) {
     window.ShridaaApp.shortlist.push(artworkId);
     showToast(`Saved "${art ? art.name : 'Artwork'}" to Shortlist`, 'success');
   }
-  
-  localStorage.setItem('shridaa_shortlist', JSON.stringify(window.ShridaaApp.shortlist));
+
+  if (!window.ShridaaUI.store('shridaa_shortlist', window.ShridaaApp.shortlist)) showToast('Your shortlist can only be kept for this visit because browser storage is unavailable.', 'info');
   updateShortlistBadge();
   renderShortlist();
-  
+
   // Update card buttons across document
   document.querySelectorAll(`.artwork-card[data-id="${artworkId}"] .card-shortlist-btn`).forEach(btn => {
     const isSaved = window.ShridaaApp.shortlist.includes(artworkId);
@@ -418,14 +405,14 @@ function toggleShortlist(artworkId) {
 
 function updateShortlistBadge() {
   const count = window.ShridaaApp.shortlist.length;
-  
+
   // Header badge
   const headerCount = document.getElementById('shortlistCount');
   if (headerCount) {
     headerCount.textContent = count;
     headerCount.style.display = count > 0 ? 'flex' : 'none';
   }
-  
+
   // Mobile bar badge
   const mobileBarBadge = document.getElementById('mobileBarBadge');
   if (mobileBarBadge) {
@@ -438,7 +425,7 @@ function updateShortlistBadge() {
   if (mobileCounter) {
     mobileCounter.textContent = `${count} Saved`;
   }
-  
+
   // Drawer count badge
   const drawerCount = document.getElementById('shortlistCountBadge');
   if (drawerCount) {
@@ -460,7 +447,7 @@ function closeShortlist() {
   const backdrop = document.getElementById('shortlistBackdrop');
   if (drawer) drawer.classList.remove('active');
   if (backdrop) backdrop.classList.remove('active');
-  
+
   if (!document.getElementById('artworkModal') || document.getElementById('artworkModal').style.display === 'none') {
     document.body.style.overflow = '';
   }
@@ -472,7 +459,7 @@ function renderShortlist() {
   const footer = document.getElementById('shortlistFooter');
   const totalValEl = document.getElementById('shortlistTotalVal');
   const waBtn = document.getElementById('shortlistWhatsappBtn');
-  
+
   if (!itemsList) return;
 
   const savedArtworks = window.ShridaaApp.shortlist
@@ -491,7 +478,8 @@ function renderShortlist() {
 
   let totalValue = 0;
   itemsList.innerHTML = savedArtworks.map(art => {
-    if (art.price) totalValue += Number(art.price);
+    if (art.isPriceVisible !== false && art.price !== null) totalValue += Number(art.price);
+    art = window.ShridaaUI.htmlArtwork(art);
     return `
       <div class="shortlist-item">
         <img src="${art.fallbackImage || art.image}" alt="${art.name}" class="shortlist-item-img">
@@ -500,28 +488,29 @@ function renderShortlist() {
           <span class="shortlist-item-meta">${art.size || 'Lippan Mud & Mirror'}</span>
           <span class="shortlist-item-price">${formatPrice(art.price, art.currency, art.isPriceVisible)}</span>
         </div>
-        <button type="button" class="shortlist-remove-btn" onclick="window.ShridaaApp.toggleShortlist('${art.id}')" title="Remove from shortlist">✕</button>
+        <button type="button" class="shortlist-remove-btn" data-action="shortlist" data-art-id="${art.id}" title="Remove from shortlist">✕</button>
       </div>
     `;
   }).join('');
 
   if (totalValEl) {
-    totalValEl.textContent = '₹' + totalValue.toLocaleString('en-IN');
+    totalValEl.textContent = '₹' + totalValue.toLocaleString('en-IN') + (savedArtworks.some(a => a.isPriceVisible === false || a.price === null) ? ' + prices on request' : '');
   }
 
   if (waBtn) {
-    const names = savedArtworks.map(a => `• ${a.name} (${formatPrice(a.price)})`).join('%0A');
-    const waText = `Hello Ashima, I have curated a shortlist of ${savedArtworks.length} Lippan art pieces from Shridaa Arts:%0A%0A${names}%0A%0ATotal Art Value: ₹${totalValue.toLocaleString('en-IN')} (Shipping Excluded)%0A%0ACould we discuss order delivery, shipping calculation, and advance pre-payment (UPI on 9983466388)?`;
-    waBtn.href = `https://wa.me/919983466388?text=${waText}`;
+    const names = savedArtworks.map(a => '• ' + a.name + ' (' + formatPrice(a.price, a.currency, a.isPriceVisible) + ')').join('\n');
+    const hidden = savedArtworks.some(a => a.isPriceVisible === false || a.price === null);
+    const waText = 'Hello Ashima, my shortlist:\n\n' + names + '\n\nKnown artwork total: ₹' + totalValue.toLocaleString('en-IN') + (hidden ? ' + prices on request' : '') + ' (Shipping Excluded)\nCould we discuss ordering and shipping details?';
+    waBtn.href = 'https://wa.me/919983466388?text=' + encodeURIComponent(waText);
   }
 }
 
 // ✦ WALL ART VISUALIZER FUNCTIONS
 function openWallVisualizer(artworkId) {
-  const art = artworkId 
-    ? window.ShridaaApp.artworks.find(a => a.id === artworkId) 
+  const art = artworkId
+    ? window.ShridaaApp.artworks.find(a => a.id === artworkId)
     : window.ShridaaApp.selectedArtwork;
-    
+
   if (!art) return;
 
   const modal = document.getElementById('wallVisualizerModal');
@@ -543,10 +532,11 @@ function openWallVisualizer(artworkId) {
   }
 
   if (shortlistBtn) {
+    shortlistBtn.textContent = window.ShridaaApp.shortlist.includes(art.id) ? 'Saved' : 'Add to Shortlist';
     shortlistBtn.onclick = () => {
       toggleShortlist(art.id);
       const isSaved = window.ShridaaApp.shortlist.includes(art.id);
-      shortlistBtn.innerHTML = isSaved 
+      shortlistBtn.innerHTML = isSaved
         ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="#C59A4E" stroke="#C59A4E" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved`
         : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Save to Shortlist`;
     };
@@ -600,7 +590,7 @@ function setupCommissionEstimator() {
 
     if (waBtn) {
       const msg = `Hello Ashima, I calculated a bespoke Lippan art commission on your website:%0A- Shape: ${currentShape.toUpperCase()}%0A- Size: ${currentSize} × ${currentSize} inches%0A- Complexity: ${currentDetail.toUpperCase()}%0A- Estimated Range: ₹${lowEst.toLocaleString('en-IN')} – ₹${highEst.toLocaleString('en-IN')} (Shipping Excluded)%0A%0ACan we discuss motif customization, shipping, and advance pre-payment (direct transfer on 9983466388)?`;
-      waBtn.href = `https://wa.me/919983466388?text=${msg}`;
+      waBtn.href = `https://wa.me/919983466388?text=${encodeURIComponent(msg.replaceAll('%0A', '\n'))}`;
     }
   }
 
@@ -639,7 +629,7 @@ function switchDetailImage(src, index) {
   const mainImg = document.getElementById('modalMainImg');
   if (mainImg) mainImg.src = src;
   window.ShridaaApp.lightboxIndex = index;
-  
+
   const thumbs = document.querySelectorAll('.detail-thumb-btn');
   thumbs.forEach((t, i) => {
     t.classList.toggle('active', i === index);
@@ -649,12 +639,7 @@ function switchDetailImage(src, index) {
 function closeArtworkDetail() {
   const modal = document.getElementById('artworkModal');
   if (modal) modal.style.display = 'none';
-  document.body.style.overflow = '';
-  
-  // Clean hash if was artwork
-  if (window.location.hash.startsWith('#artwork=')) {
-    history.pushState('', document.title, window.location.pathname + window.location.search);
-  }
+  if (window.location.hash.startsWith('#artwork=')) { history.replaceState(null, '', '#artworks'); showSection('artworks'); }
 }
 
 // Lightbox
@@ -685,18 +670,19 @@ function closeLightbox() {
 function navigateLightbox(dir) {
   const images = window.ShridaaApp.lightboxImages;
   if (!images || images.length === 0) return;
-  
+
   let newIdx = window.ShridaaApp.lightboxIndex + dir;
   if (newIdx < 0) newIdx = images.length - 1;
   if (newIdx >= images.length) newIdx = 0;
-  
+
   window.ShridaaApp.lightboxIndex = newIdx;
   const lbImg = document.getElementById('lightboxImg');
   if (lbImg) lbImg.src = images[newIdx];
 }
 
 // Router & Section Switching
-function showSection(sectionId) {
+function showSection(sectionId, updateUrl = true) {
+  if (updateUrl && sectionId !== "admin") { const hash = sectionId === "home" ? "" : `#${sectionId}`; if (location.hash !== hash) history.pushState(null, "", location.pathname + location.search + hash); }
   const mainContent = document.getElementById('mainContent');
   const allArtworksView = document.getElementById('allArtworksView');
   const adminView = document.getElementById('adminView');
@@ -730,10 +716,7 @@ function showSection(sectionId) {
     if (sectionId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.querySelectorAll(`[href="./"], [href="#home"]`).forEach(el => el.classList.add('active'));
-      if (window.history && window.history.replaceState) {
-        const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
-        window.history.replaceState(null, '', cleanPath);
-      }
+
       return;
     }
 
@@ -748,29 +731,20 @@ function showSection(sectionId) {
 }
 
 function handleRoute() {
-  const hash = window.location.hash.replace('#', '');
-  
+  const hash = window.location.hash.slice(1);
   if (hash.startsWith('artwork=')) {
-    const artId = hash.split('=')[1];
-    openArtworkDetail(artId);
-  } else if (hash === 'artworks') {
-    showSection('artworks');
-  } else if (hash === 'admin') {
-    const base = window.location.pathname.replace(/\/index\.html$/, '');
-    const adminUrl = base.endsWith('/') ? `${base}admin/` : `${base}/admin/`;
-    window.location.replace(adminUrl);
+    let id;
+    try { id = decodeURIComponent(hash.slice(8)); } catch { showSection('home', false); return; }
+    showSection('artworks', false);
+    if (window.ShridaaApp.artworks.some(a => a.id === id || a.slug === id)) openArtworkDetail(id);
+    else showToast('This artwork is no longer available.', 'info');
     return;
-  } else if (hash === 'home') {
-    showSection('home');
-    if (window.history && window.history.replaceState) {
-      const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
-      window.history.replaceState(null, '', cleanPath);
-    }
-  } else if (['about', 'categories', 'craftsmanship', 'reviews', 'contact'].includes(hash)) {
-    showSection(hash);
-  } else {
-    showSection('home');
   }
+  const modal = document.getElementById('artworkModal');
+  if (modal) modal.style.display = 'none';
+  closeLightbox(); closeWallVisualizer();
+  if (hash === 'admin') { window.location.assign('admin/'); return; }
+  showSection(['artworks','about','categories','craftsmanship','contact'].includes(hash) ? hash : 'home', false);
 }
 
 // Reviews Carousel Side Scroll
@@ -900,10 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       showSection('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (window.history && window.history.replaceState) {
-        const cleanPath = window.location.pathname.replace(/\/home\/?$/, '/');
-        window.history.replaceState(null, '', cleanPath);
-      }
+
     });
   });
 
@@ -917,10 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetSection = hash.replace('#', '');
       showSection(targetSection);
 
-      // Clean the address bar so '#' does not appear in browser URL
-      if (window.history && window.history.replaceState) {
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
+
     });
   });
 
@@ -1019,7 +987,7 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomBtn.addEventListener('click', () => {
       if (window.ShridaaApp.selectedArtwork) {
         openLightbox(
-          window.ShridaaApp.lightboxImages, 
+          window.ShridaaApp.lightboxImages,
           window.ShridaaApp.lightboxIndex,
           window.ShridaaApp.selectedArtwork.name
         );
@@ -1030,7 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mainImg.addEventListener('click', () => {
       if (window.ShridaaApp.selectedArtwork) {
         openLightbox(
-          window.ShridaaApp.lightboxImages, 
+          window.ShridaaApp.lightboxImages,
           window.ShridaaApp.lightboxIndex,
           window.ShridaaApp.selectedArtwork.name
         );
@@ -1043,11 +1011,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
       if (!window.ShridaaApp.selectedArtwork) return;
-      const shareUrl = `${window.location.origin}${window.location.pathname}#artwork=${window.ShridaaApp.selectedArtwork.id}`;
+      const shareUrl = new URL('artwork/' + window.ShridaaApp.selectedArtwork.slug + '/', document.baseURI).href;
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          showToast('Artwork link copied to clipboard!', 'success');
-        });
+        navigator.clipboard.writeText(shareUrl).then(() => showToast('Artwork link copied to clipboard!', 'success')).catch(() => showToast('Copy this artwork URL from your address bar.', 'info'));
       } else {
         showToast('Link: ' + shareUrl, 'info');
       }
@@ -1144,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('#roomSceneButtons .vis-btn-pill').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const scene = btn.dataset.scene;
-      
+
       const consoleEl = document.getElementById('furnitureConsole');
       const sofaEl = document.getElementById('furnitureSofa');
       const mandirEl = document.getElementById('furnitureMandir');
@@ -1172,6 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeArtworkDetail();
       closeWallVisualizer();
       closeShortlist();
+      closeDrawer();
     } else if (e.key === 'ArrowLeft') {
       if (lbModal && lbModal.style.display === 'flex') navigateLightbox(-1);
     } else if (e.key === 'ArrowRight') {
@@ -1201,21 +1168,22 @@ document.addEventListener('DOMContentLoaded', () => {
           statusEl.className = 'form-status';
         }
 
-        const res = await fetch('/api/contact', {
+        const res = await fetch('api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        if (res.ok) {
+        const result = await res.json();
+        if (res.ok && result.success) {
           if (statusEl) {
-            statusEl.textContent = 'Thank you! Your enquiry has been received. Ashima will contact you soon.';
+            statusEl.textContent = result.message;
             statusEl.className = 'form-status success';
           }
           contactForm.reset();
-          showToast('Message sent successfully!', 'success');
+          showToast('Enquiry saved in the studio inbox.', 'success');
         } else {
-          throw new Error('Submission failed');
+          throw new Error(result.error || 'Submission failed');
         }
       } catch (err) {
         if (statusEl) {
@@ -1230,4 +1198,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listen to hash changes for SPA routing
   window.addEventListener('hashchange', handleRoute);
+  window.addEventListener('popstate', handleRoute);
+  window.addEventListener('pageshow', e => { if (e.persisted) loadArtworksData(); });
+});
+
+document.addEventListener('click', event => {
+  const control = event.target.closest('[data-action]');
+  if (!control) return;
+  event.preventDefault();
+  const id = control.dataset.artId;
+  switch (control.dataset.action) {
+    case 'detail': openArtworkDetail(id); break;
+    case 'shortlist': toggleShortlist(id); break;
+    case 'wall': openWallVisualizer(id); break;
+    case 'category': window.ShridaaApp.filterByCategory(control.dataset.category); break;
+    case 'image': switchDetailImage(control.dataset.image, Number(control.dataset.index)); break;
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.body.dataset.staticSite === 'true') {
+    document.querySelectorAll('a[href="admin/"]').forEach(a => a.hidden = true);
+    const form = document.getElementById('contactForm');
+    if (form) { form.hidden = true; const link=document.createElement('a'); link.className='btn btn-whatsapp'; link.href='https://wa.me/919983466388'; link.textContent='Send your enquiry on WhatsApp'; form.after(link); }
+  }
 });
