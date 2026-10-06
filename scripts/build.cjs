@@ -41,7 +41,8 @@ html=html.replace('Your message will be saved in the studio inbox. You can also 
 html=html.replace(/<form id="contactForm"[\s\S]*?<\/form>/,'<a class="btn btn-whatsapp" href="https://wa.me/919983466388" target="_blank" rel="noopener">Send your enquiry on WhatsApp</a>');
 fs.writeFileSync(htmlFile,html);
 const adminFile=path.join(output,'admin/index.html');
-let admin=fs.readFileSync(adminFile,'utf8').replace('<body class="site-body">','<body class="site-body" data-admin-mode="github">');
+const publishProvider=process.env.STATIC_HOSTING === 'github-pages' ? 'github-pages' : 'render';
+let admin=fs.readFileSync(adminFile,'utf8').replace('<body class="site-body">',`<body class="site-body" data-admin-mode="github" data-publish-provider="${publishProvider}">`);
 admin=admin.replace('Welcome Ashima! Sign in to manage artwork information, update prices, or add new creations.','Connect to GitHub to add photographs, edit artwork details and publish your changes.');
 // Match CRLF sources as well as LF sources.
 admin=admin.replace(/<div class="form-group">(\s*<label for="adminUser">Username<\/label>)/,'<div class="form-group" hidden>$1');
@@ -49,7 +50,8 @@ admin=admin.replace('<label for="adminPass">Password</label>','<label for="admin
 admin=admin.replace('placeholder="Enter studio password"','placeholder="Paste your GitHub access token" autocomplete="off" spellcheck="false"');
 admin=admin.replace('Sign In to Studio Manager','Connect to GitHub');
 admin=admin.replace('aria-label="Show password" title="Show/Hide password"','aria-label="Show token" title="Show/Hide token"');
-admin=admin.replace('<div class="admin-login-footer text-center">',`<div class="admin-login-footer text-center"><p>Use a fine-grained token for <strong>panbhav/shridaa-arts</strong> with <strong>Contents: Read and write</strong>. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a token</a>.</p><p>Your token stays in this tab's memory. Connect again after closing or refreshing the page. Each save starts a website rebuild once GitHub Actions publishing is configured.</p>`);
+const publishingHint=publishProvider === 'render' ? 'Each save starts a website rebuild when Render automatic deploys are enabled for main.' : 'Each save starts a website rebuild once GitHub Actions publishing is configured.';
+admin=admin.replace('<div class="admin-login-footer text-center">',`<div class="admin-login-footer text-center"><p>Use a fine-grained token for <strong>panbhav/shridaa-arts</strong> with <strong>Contents: Read and write</strong>. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a token</a>.</p><p>Your token stays in this tab's memory. Connect again after closing or refreshing the page. ${publishingHint}</p>`);
 admin=admin.replace(/  <section class="container section" id="enquiryInbox"[^\n]*\r?\n/,'');
 fs.writeFileSync(adminFile,admin);
 console.log(`Built ${items.length} artworks and detail pages in dist/, including the GitHub publishing admin.`);

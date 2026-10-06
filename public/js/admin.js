@@ -10,7 +10,10 @@ const githubPublisher = githubMode ? new window.ShridaaGitHubPublisher.Publisher
   status.hidden = false;
   document.getElementById('publishMessage').textContent = 'Saved to GitHub. The website rebuild is pending; check publishing progress below.';
   document.getElementById('publishCommit').href = publication.commitUrl;
-  document.getElementById('publishProgress').href = publication.actionsUrl;
+  const progress = document.getElementById('publishProgress');
+  const renderHosting = document.body.dataset.publishProvider === 'render';
+  progress.href = renderHosting ? 'https://dashboard.render.com/' : publication.actionsUrl;
+  progress.textContent = renderHosting ? 'Check Render deployments' : 'Check GitHub Actions publishing';
 }}) : null;
 
 window.ShridaaAdmin = {

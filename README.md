@@ -34,6 +34,8 @@ Optionally configure `ENQUIRY_WEBHOOK_URL` and `ENQUIRY_WEBHOOK_TOKEN` for a tru
 
 ## Hosting
 
+**Current recommended setup: GitHub storage + Render Static Site.** Connect Render to this repository's `main` branch, use `npm ci && npm run build` as the build command and `dist` as the publish directory. Enable automatic deployment on commits. No start command, Node web service, admin environment secrets or persistent disk is needed for this static version. Artwork edits still require the repository owner's fine-grained GitHub token with Contents read/write. The default build points publishing progress to Render; use `STATIC_HOSTING=github-pages` only when publishing through GitHub Pages instead. Keep domain DNS pointed to the Render static service and take separate backups of original photos.
+
 **Working CMS:** deploy this Node application with private environment settings and persistent `STORAGE_DIR`, behind HTTPS. Do not publish the repository directory through a static server. Express serves only approved frontend files and uploads; source files and enquiries remain private.
 
 **GitHub Pages with lightweight Studio Manager:** no Node hosting, database or customer inbox is needed. Customers use WhatsApp and email directly. The admin at `/admin/` edits `data/artworks.json` and uploads optimized photos into `public/assets/artworks/` through the GitHub API. Each save creates one commit on `main`, including catalogue and photo. The Actions workflow tests, builds and deploys `dist/`. After switching to Actions, `gh-pages` is no longer the publishing source.
