@@ -5,7 +5,7 @@
  */
 
 window.ShridaaAdmin = {
-  token: sessionStorage.getItem('shridaa_admin_token') || localStorage.getItem('shridaa_admin_token') || null,
+  token: getAdminToken(),
   artworks: [],
   editingId: null
 };
@@ -27,182 +27,44 @@ window.showToast = window.showToast || showToast;
 
 // Check session on load or view change
 async function checkAdminSession() {
-  const token = window.ShridaaAdmin.token;
-  const loginBox = document.getElementById('adminLoginBox');
-  const dashboard = document.getElementById('adminDashboard');
-
-  if (!token) {
-    if (loginBox) loginBox.style.display = 'block';
-    if (dashboard) dashboard.style.display = 'none';
-    return;
-  }
-
-  // If static session token
-  if (token.startsWith('shridaa_studio_session_')) {
-    if (loginBox) loginBox.style.display = 'none';
-    if (dashboard) dashboard.style.display = 'block';
-    loadAdminDashboardData();
-    return;
-  }
-
-  // Try server verification
+  if (!window.ShridaaAdmin.token) { showAdminLogin(); return; }
   try {
-    const res = await fetch('/api/admin/verify', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const contentType = res.headers.get('content-type') || '';
-    if (res.ok && contentType.includes('application/json')) {
-      const data = await res.json();
-      if (data.valid) {
-        if (loginBox) loginBox.style.display = 'none';
-        if (dashboard) dashboard.style.display = 'block';
-        loadAdminDashboardData();
-        return;
-      }
-    }
-    // If on static hosting (like GitHub Pages) or offline, maintain session
-    if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
-      if (loginBox) loginBox.style.display = 'none';
-      if (dashboard) dashboard.style.display = 'block';
-      loadAdminDashboardData();
-      return;
-    }
-    logoutAdmin();
-  } catch (err) {
-    if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
-      if (loginBox) loginBox.style.display = 'none';
-      if (dashboard) dashboard.style.display = 'block';
-      loadAdminDashboardData();
-      return;
-    }
-    logoutAdmin();
-  }
+    await adminRequest('api/admin/verify');
+    document.getElementById('adminLoginBox').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    await loadAdminDashboardData(); await loadEnquiries();
+  } catch (err) { showAdminLogin(); showToast(err.message, 'error'); }
 }
 
 // Admin Login
 async function handleAdminLogin(e) {
   e.preventDefault();
-  const username = document.getElementById('adminUser').value.trim();
-  const password = document.getElementById('adminPass').value;
-  const statusEl = document.getElementById('adminLoginStatus');
   const btn = document.getElementById('adminLoginBtn');
-
+  const status = document.getElementById('adminLoginStatus');
+  btn.disabled = true;
   try {
-    if (btn) btn.disabled = true;
-    if (statusEl) {
-      statusEl.textContent = 'Verifying credentials...';
-      statusEl.className = 'admin-login-status';
-    }
-
-    let authenticated = false;
-    let token = null;
-
-    // 1. First attempt verification against backend API (if server is running)
-    try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        const data = await res.json();
-        if (res.ok && data.token) {
-          token = data.token;
-          authenticated = true;
-        } else if (res.status === 401) {
-          throw new Error(data.error || 'Invalid credentials');
-        }
-      }
-    } catch (apiErr) {
-      if (apiErr.message === 'Invalid credentials') {
-        throw apiErr;
-      }
-      console.warn('Backend API unavailable (static hosting); evaluating studio credentials client-side:', apiErr);
-    }
-
-    // 2. If static hosting (like GitHub Pages where POST /api returns 404 HTML)
-    if (!authenticated) {
-      if (username === 'admin' && (password === 'shridaa@art2026' || password === 'admin123')) {
-        token = 'shridaa_studio_session_' + Date.now();
-        authenticated = true;
-      } else {
-        throw new Error('Invalid username or password. Please verify your credentials.');
-      }
-    }
-
-    if (authenticated && token) {
-      window.ShridaaAdmin.token = token;
-      sessionStorage.setItem('shridaa_admin_token', token);
-      localStorage.setItem('shridaa_admin_token', token);
-
-      if (statusEl) statusEl.textContent = '';
-      showToast('Welcome back, Ashima! Signed in to Studio Manager.', 'success');
-      checkAdminSession();
-    }
-  } catch (err) {
-    if (statusEl) {
-      statusEl.textContent = err.message || 'Login failed';
-      statusEl.className = 'admin-login-status error';
-    }
-    showToast(err.message || 'Login failed', 'error');
-  } finally {
-    if (btn) btn.disabled = false;
-  }
+    const data = await adminRequest('api/admin/login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('adminUser').value.trim(), password: document.getElementById('adminPass').value }) });
+    window.ShridaaAdmin.token = data.token;
+    try { sessionStorage.setItem('shridaa_admin_token', data.token); localStorage.removeItem('shridaa_admin_token'); localStorage.removeItem('shridaa_local_artworks'); } catch {}
+    document.getElementById('adminPass').value = '';
+    status.textContent = ''; await checkAdminSession();
+  } catch (err) { status.textContent = err.message; status.className = 'admin-login-status error'; }
+  finally { btn.disabled = false; }
 }
 
 // Admin Logout
 function logoutAdmin() {
   window.ShridaaAdmin.token = null;
-  sessionStorage.removeItem('shridaa_admin_token');
-  localStorage.removeItem('shridaa_admin_token');
-  
-  const loginBox = document.getElementById('adminLoginBox');
-  const dashboard = document.getElementById('adminDashboard');
-  if (loginBox) loginBox.style.display = 'block';
-  if (dashboard) dashboard.style.display = 'none';
+  try { sessionStorage.removeItem('shridaa_admin_token'); localStorage.removeItem('shridaa_admin_token'); } catch {}
+  showAdminLogin();
   showToast('Signed out of Studio Manager', 'info');
 }
 
 // Load Artworks Data for Dashboard
 async function loadAdminDashboardData() {
-  try {
-    let artworks = [];
-    const localSaved = localStorage.getItem('shridaa_local_artworks');
-    if (localSaved) {
-      try {
-        const parsed = JSON.parse(localSaved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          artworks = parsed;
-        }
-      } catch (e) {}
-    }
-
-    if (artworks.length === 0) {
-      try {
-        const res = await fetch('/api/artworks');
-        const contentType = res.headers.get('content-type') || '';
-        if (res.ok && contentType.includes('application/json')) {
-          const data = await res.json();
-          artworks = data.artworks || data;
-        } else {
-          throw new Error('Fallback to static file');
-        }
-      } catch (e) {
-        let res = await fetch('data/artworks.json');
-        if (!res.ok) res = await fetch('../data/artworks.json');
-        artworks = await res.json();
-      }
-    }
-
-    window.ShridaaAdmin.artworks = artworks;
-    renderAdminStats();
-    renderAdminTable();
-  } catch (err) {
-    console.error('Error fetching admin artworks:', err);
-    showToast('Failed to load artwork list', 'error');
-  }
+  const data = await adminRequest('api/admin/artworks');
+  window.ShridaaAdmin.artworks = data.artworks;
+  renderAdminStats(); renderAdminTable(document.getElementById('adminSearchInput')?.value || '');
 }
 
 // Render Stats Cards
@@ -236,7 +98,8 @@ function renderAdminTable(filterQuery = '') {
     );
   }
 
-  tbody.innerHTML = list.map(art => {
+  tbody.innerHTML = list.map(raw => {
+    const art = window.ShridaaUI.htmlArtwork(raw);
     const imgUrl = art.fallbackImage || art.image;
     const isAvail = art.availability === 'Available';
     const isFeat = art.featured === true;
@@ -263,7 +126,7 @@ function renderAdminTable(filterQuery = '') {
                    min="0">
             <button type="button" 
                     class="inline-price-btn" 
-                    onclick="window.ShridaaAdmin.quickSavePrice('${art.id}')"
+                    data-admin-action="price" data-art-id="${art.id}"
                     title="Click to save updated price">
               Save
             </button>
@@ -272,7 +135,7 @@ function renderAdminTable(filterQuery = '') {
         <td>
           <button type="button" 
                   class="btn-icon ${isAvail ? 'text-success' : ''}" 
-                  onclick="window.ShridaaAdmin.toggleAvailability('${art.id}')"
+                  data-admin-action="availability" data-art-id="${art.id}"
                   title="Toggle status">
             ${art.availability || 'Available'}
           </button>
@@ -280,17 +143,17 @@ function renderAdminTable(filterQuery = '') {
         <td>
           <button type="button" 
                   class="btn-icon ${isFeat ? 'text-gold' : ''}" 
-                  onclick="window.ShridaaAdmin.toggleFeatured('${art.id}')"
+                  data-admin-action="featured" data-art-id="${art.id}"
                   title="Toggle featured">
             ${isFeat ? '★ Featured' : '☆ Standard'}
           </button>
         </td>
         <td>
           <div class="admin-row-actions">
-            <button type="button" class="btn-icon" onclick="window.ShridaaAdmin.openEditModal('${art.id}')" title="Full Edit">
+            <button type="button" class="btn-icon" data-admin-action="edit" data-art-id="${art.id}" title="Full Edit">
               Edit
             </button>
-            <button type="button" class="btn-icon btn-icon-danger" onclick="window.ShridaaAdmin.deleteArtwork('${art.id}')" title="Delete Artwork">
+            <button type="button" class="btn-icon btn-icon-danger" data-admin-action="delete" data-art-id="${art.id}" title="Delete Artwork">
               ✕
             </button>
           </div>
@@ -302,147 +165,32 @@ function renderAdminTable(filterQuery = '') {
 
 // 1-Click Inline Price Save
 async function quickSavePrice(artworkId) {
-  const inputEl = document.getElementById(`priceInput-${artworkId}`);
-  if (!inputEl) return;
-  const newPrice = Number(inputEl.value);
-
-  if (isNaN(newPrice) || newPrice < 0) {
-    showToast('Please enter a valid price', 'error');
-    return;
-  }
-
-  // If server is available, attempt backend patch
-  if (window.ShridaaAdmin.token && !window.ShridaaAdmin.token.startsWith('shridaa_studio_session_')) {
-    try {
-      await fetch(`/api/admin/artworks/${artworkId}/price`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${window.ShridaaAdmin.token}`
-        },
-        body: JSON.stringify({ price: newPrice })
-      });
-    } catch (e) {
-      console.warn('Backend server patch error (continuing local update):', e);
-    }
-  }
-
-  // Update in-memory data
-  const artIndex = window.ShridaaAdmin.artworks.findIndex(a => a.id === artworkId);
-  if (artIndex !== -1) {
-    window.ShridaaAdmin.artworks[artIndex].price = newPrice;
-  }
-  if (window.ShridaaApp && window.ShridaaApp.artworks) {
-    const appIndex = window.ShridaaApp.artworks.findIndex(a => a.id === artworkId);
-    if (appIndex !== -1) {
-      window.ShridaaApp.artworks[appIndex].price = newPrice;
-    }
-  }
-
-  // Save to localStorage for instant live persistence across sessions
-  localStorage.setItem('shridaa_local_artworks', JSON.stringify(window.ShridaaAdmin.artworks));
-
-  showToast(`Price updated to ₹${newPrice.toLocaleString('en-IN')}`, 'success');
-  renderAdminTable();
-  if (window.ShridaaApp && window.ShridaaApp.renderAll) {
-    window.ShridaaApp.renderAll();
-  }
+  const input = document.getElementById('priceInput-' + artworkId);
+  const price = Number(input.value);
+  if (input.value === '' || !Number.isFinite(price) || price < 0) { showToast('Enter a valid price', 'error'); return; }
+  const current = window.ShridaaAdmin.artworks.find(a => a.id === artworkId);
+  await saveQuick(artworkId, { price, ...(current.originalPrice && current.originalPrice < price ? { originalPrice: null } : {}) }, 'Price saved');
 }
 
 // Toggle Availability Quick Action
 async function toggleAvailability(artworkId) {
-  const art = window.ShridaaAdmin.artworks.find(a => a.id === artworkId);
-  if (!art) return;
-
-  const nextStatus = art.availability === 'Available' ? 'Sold' : 'Available';
-
-  if (window.ShridaaAdmin.token && !window.ShridaaAdmin.token.startsWith('shridaa_studio_session_')) {
-    try {
-      await fetch(`/api/admin/artworks/${artworkId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${window.ShridaaAdmin.token}`
-        },
-        body: JSON.stringify({ availability: nextStatus })
-      });
-    } catch (e) {}
-  }
-
-  art.availability = nextStatus;
-  if (window.ShridaaApp && window.ShridaaApp.artworks) {
-    const appArt = window.ShridaaApp.artworks.find(a => a.id === artworkId);
-    if (appArt) appArt.availability = nextStatus;
-  }
-
-  localStorage.setItem('shridaa_local_artworks', JSON.stringify(window.ShridaaAdmin.artworks));
-  showToast(`Status updated to ${nextStatus}`, 'success');
-  renderAdminStats();
-  renderAdminTable();
-  if (window.ShridaaApp && window.ShridaaApp.renderAll) window.ShridaaApp.renderAll();
+  const art=window.ShridaaAdmin.artworks.find(a=>a.id===artworkId);
+  const statuses=['Available','Sold','Made to Order'];
+  await saveQuick(artworkId,{availability:statuses[(statuses.indexOf(art.availability)+1)%statuses.length]},'Availability saved');
 }
 
 // Toggle Featured Quick Action
 async function toggleFeatured(artworkId) {
-  const art = window.ShridaaAdmin.artworks.find(a => a.id === artworkId);
-  if (!art) return;
-
-  const nextFeat = !art.featured;
-
-  if (window.ShridaaAdmin.token && !window.ShridaaAdmin.token.startsWith('shridaa_studio_session_')) {
-    try {
-      await fetch(`/api/admin/artworks/${artworkId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${window.ShridaaAdmin.token}`
-        },
-        body: JSON.stringify({ featured: nextFeat })
-      });
-    } catch (e) {}
-  }
-
-  art.featured = nextFeat;
-  if (window.ShridaaApp && window.ShridaaApp.artworks) {
-    const appArt = window.ShridaaApp.artworks.find(a => a.id === artworkId);
-    if (appArt) appArt.featured = nextFeat;
-  }
-
-  localStorage.setItem('shridaa_local_artworks', JSON.stringify(window.ShridaaAdmin.artworks));
-  showToast(nextFeat ? 'Marked as Featured Piece' : 'Set to Standard Collection', 'success');
-  renderAdminStats();
-  renderAdminTable();
-  if (window.ShridaaApp && window.ShridaaApp.renderAll) window.ShridaaApp.renderAll();
+  const art=window.ShridaaAdmin.artworks.find(a=>a.id===artworkId);
+  await saveQuick(artworkId,{featured:!art.featured},'Featured status saved');
 }
 
 // Delete Artwork
 async function deleteArtwork(artworkId) {
   const art = window.ShridaaAdmin.artworks.find(a => a.id === artworkId);
-  const name = art ? art.name : artworkId;
-  
-  if (!confirm(`Are you sure you want to remove "${name}" from the portfolio?`)) {
-    return;
-  }
-
-  if (window.ShridaaAdmin.token && !window.ShridaaAdmin.token.startsWith('shridaa_studio_session_')) {
-    try {
-      await fetch(`/api/admin/artworks/${artworkId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${window.ShridaaAdmin.token}` }
-      });
-    } catch (e) {}
-  }
-
-  window.ShridaaAdmin.artworks = window.ShridaaAdmin.artworks.filter(a => a.id !== artworkId);
-  if (window.ShridaaApp && window.ShridaaApp.artworks) {
-    window.ShridaaApp.artworks = window.ShridaaApp.artworks.filter(a => a.id !== artworkId);
-  }
-
-  localStorage.setItem('shridaa_local_artworks', JSON.stringify(window.ShridaaAdmin.artworks));
-  showToast(`Artwork "${name}" removed`, 'success');
-  renderAdminStats();
-  renderAdminTable();
-  if (window.ShridaaApp && window.ShridaaApp.renderAll) window.ShridaaApp.renderAll();
+  if (!confirm('Remove ' + art.name + ' from the portfolio?')) return;
+  try { await adminRequest('api/admin/artworks/' + encodeURIComponent(artworkId),{method:'DELETE'}); await loadAdminDashboardData(); showToast('Artwork removed from the server','success'); }
+  catch(err) { showToast(err.message,'error'); }
 }
 
 // Helper to read, scale, and compress uploaded photo for fast loading and storage
@@ -502,6 +250,7 @@ function openAddArtworkModal() {
   document.getElementById('editArtworkId').value = '';
   document.getElementById('formArtAvailability').value = 'Available';
   document.getElementById('formArtFeatured').checked = false;
+  document.getElementById('formArtPriceVisible').checked = true;
   document.getElementById('formArtCustomizable').checked = true;
 
   if (modal) modal.style.display = 'flex';
@@ -524,12 +273,13 @@ function openEditArtworkModal(artworkId) {
   document.getElementById('editArtworkId').value = art.id;
   document.getElementById('formArtName').value = art.name;
   document.getElementById('formArtCategory').value = art.category || '';
-  document.getElementById('formArtPrice').value = art.price || '';
+  document.getElementById('formArtPrice').value = art.price ?? '';
   document.getElementById('formArtOrigPrice').value = art.originalPrice || '';
   document.getElementById('formArtSize').value = art.size || '';
   document.getElementById('formArtMaterial').value = art.material || '';
   document.getElementById('formArtAvailability').value = art.availability || 'Available';
   document.getElementById('formArtFeatured').checked = Boolean(art.featured);
+  document.getElementById('formArtPriceVisible').checked = art.isPriceVisible !== false;
   document.getElementById('formArtCustomizable').checked = Boolean(art.isCustomizable);
   document.getElementById('formArtShortDesc').value = art.shortDescription || '';
   document.getElementById('formArtDetailedDesc').value = art.detailedDescription || '';
@@ -538,7 +288,7 @@ function openEditArtworkModal(artworkId) {
     preview.style.display = 'block';
     preview.innerHTML = `
       <small class="text-muted">Current Artwork Photo:</small><br>
-      <img src="${art.fallbackImage || art.image}" alt="${art.name}">
+      <img src="${window.ShridaaUI.escapeHtml(window.ShridaaUI.safeImage(art.fallbackImage || art.image))}" alt="${window.ShridaaUI.escapeHtml(art.name)}">
     `;
   }
 
@@ -553,99 +303,20 @@ function closeAdminModal() {
 // Handle Add / Edit Form Submit
 async function handleAdminArtworkFormSubmit(e) {
   e.preventDefault();
-  const form = document.getElementById('adminArtworkForm');
-  const saveBtn = document.getElementById('adminSaveArtworkBtn') || document.getElementById('adminSaveBtn') || (form ? form.querySelector('button[type="submit"]') : null);
-  const isEditing = Boolean(window.ShridaaAdmin.editingId);
-  const formData = new FormData(form);
-  const fileInput = document.getElementById('formArtImageFile');
-
+  const form=document.getElementById('adminArtworkForm');
+  const saveBtn=form.querySelector('button[type="submit"]');
+  const data=new FormData(form);
+  for(const key of ['featured','isCustomizable','isPriceVisible']) data.set(key,String(document.getElementById({featured:'formArtFeatured',isCustomizable:'formArtCustomizable',isPriceVisible:'formArtPriceVisible'}[key]).checked));
+  const file=document.getElementById('formArtImageFile').files[0];
+  if (!file) data.delete('imageFile');
+  if (file && file.size > 15*1024*1024) { showToast('Please choose an image smaller than 15 MB','error'); return; }
+  saveBtn.disabled=true; saveBtn.textContent='Saving...';
   try {
-    if (saveBtn) {
-      saveBtn.disabled = true;
-      saveBtn.textContent = 'Saving...';
-    }
-
-    let uploadedDataUrl = null;
-    if (fileInput && fileInput.files && fileInput.files[0]) {
-      uploadedDataUrl = await readAndOptimizeImage(fileInput.files[0]);
-    }
-
-    const newArtData = {
-      name: formData.get('name').trim(),
-      category: formData.get('category').trim(),
-      price: Number(formData.get('price')),
-      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : null,
-      size: formData.get('size') ? formData.get('size').trim() : '12 × 12 inches',
-      material: formData.get('material') ? formData.get('material').trim() : 'MDF Base, Clay Relief, Mirrors',
-      availability: formData.get('availability'),
-      featured: document.getElementById('formArtFeatured').checked,
-      isCustomizable: document.getElementById('formArtCustomizable').checked,
-      shortDescription: formData.get('shortDescription') ? formData.get('shortDescription').trim() : '',
-      detailedDescription: formData.get('detailedDescription') ? formData.get('detailedDescription').trim() : ''
-    };
-
-    if (isEditing) {
-      const artIndex = window.ShridaaAdmin.artworks.findIndex(a => a.id === window.ShridaaAdmin.editingId);
-      if (artIndex !== -1) {
-        const existing = window.ShridaaAdmin.artworks[artIndex];
-        const finalImg = uploadedDataUrl || existing.fallbackImage || existing.image;
-        window.ShridaaAdmin.artworks[artIndex] = {
-          ...existing,
-          ...newArtData,
-          image: finalImg,
-          fallbackImage: finalImg,
-          gallery: uploadedDataUrl ? [uploadedDataUrl, ...(existing.gallery || [])] : (existing.gallery || [finalImg])
-        };
-      }
-      if (window.ShridaaApp && window.ShridaaApp.artworks) {
-        const appIndex = window.ShridaaApp.artworks.findIndex(a => a.id === window.ShridaaAdmin.editingId);
-        if (appIndex !== -1) {
-          const existing = window.ShridaaApp.artworks[appIndex];
-          const finalImg = uploadedDataUrl || existing.fallbackImage || existing.image;
-          window.ShridaaApp.artworks[appIndex] = {
-            ...existing,
-            ...newArtData,
-            image: finalImg,
-            fallbackImage: finalImg,
-            gallery: uploadedDataUrl ? [uploadedDataUrl, ...(existing.gallery || [])] : (existing.gallery || [finalImg])
-          };
-        }
-      }
-    } else {
-      const newId = `art-${String(window.ShridaaAdmin.artworks.length + 1).padStart(3, '0')}`;
-      const defaultImg = uploadedDataUrl || 'Assets/artworks/swarna-mandala-mirror.webp';
-      const createdItem = {
-        id: newId,
-        slug: newArtData.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'),
-        currency: 'INR',
-        isPriceVisible: true,
-        isHandmade: true,
-        displayOrder: window.ShridaaAdmin.artworks.length + 1,
-        image: defaultImg,
-        fallbackImage: defaultImg,
-        gallery: [defaultImg],
-        ...newArtData
-      };
-      window.ShridaaAdmin.artworks.unshift(createdItem);
-      if (window.ShridaaApp && window.ShridaaApp.artworks) {
-        window.ShridaaApp.artworks.unshift(createdItem);
-      }
-    }
-
-    localStorage.setItem('shridaa_local_artworks', JSON.stringify(window.ShridaaAdmin.artworks));
-    showToast(isEditing ? 'Artwork updated successfully!' : 'New artwork added to portfolio!', 'success');
-    closeAdminModal();
-    renderAdminStats();
-    renderAdminTable();
-    if (window.ShridaaApp && window.ShridaaApp.renderAll) window.ShridaaApp.renderAll();
-  } catch (err) {
-    showToast(err.message, 'error');
-  } finally {
-    if (saveBtn) {
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Save Artwork';
-    }
-  }
+    const id=window.ShridaaAdmin.editingId;
+    await adminRequest('api/admin/artworks' + (id ? '/' + encodeURIComponent(id) : ''), {method:id ? 'PUT' : 'POST',body:data});
+    await loadAdminDashboardData(); closeAdminModal(); showToast('Artwork saved to the server','success');
+  } catch(err) { showToast(err.message,'error'); }
+  finally {saveBtn.disabled=false;saveBtn.textContent='Save Artwork';}
 }
 
 // Export Backup JSON
@@ -730,3 +401,42 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cancelBtn) cancelBtn.addEventListener('click', closeAdminModal);
   if (artworkForm) artworkForm.addEventListener('submit', handleAdminArtworkFormSubmit);
 });
+
+function getAdminToken() { try {return sessionStorage.getItem('shridaa_admin_token') || null;} catch {return null;} }
+function showAdminLogin() {
+  document.getElementById('adminLoginBox').style.display='block'; document.getElementById('adminDashboard').style.display='none';
+  const inbox=document.getElementById('enquiryInbox'); if(inbox) inbox.hidden=true;
+}
+async function adminRequest(url,options={}) {
+  const headers={...(options.body instanceof FormData ? {} : {'Content-Type':'application/json'}), ...(window.ShridaaAdmin.token ? {Authorization:'Bearer '+window.ShridaaAdmin.token} : {}),...options.headers};
+  let response;
+  try {response=await fetch(url,{...options,headers,cache:'no-store'});} catch {throw new Error('Cannot reach the studio server. No changes were saved.');}
+  if(!response.headers.get('content-type')?.includes('application/json')) throw new Error('The Studio Manager requires the Node server. Static hosting supports the portfolio only.');
+  const data=await response.json();
+  if(!response.ok) {if(response.status===401 && !url.endsWith('/login')) logoutAdmin();throw new Error(data.error || 'The server could not save this change.');}
+  return data;
+}
+async function saveQuick(id,patch,message) {
+  try {await adminRequest('api/admin/artworks/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(patch)});await loadAdminDashboardData();showToast(message,'success');}
+  catch(err) {showToast(err.message,'error');}
+}
+async function loadEnquiries() {
+  const section=document.getElementById('enquiryInbox'); if(!section) return;
+  const data=await adminRequest('api/admin/enquiries');
+  section.hidden=false;
+  const list=document.getElementById('enquiryInboxList'); list.replaceChildren();
+  if(!data.enquiries.length) {list.textContent='No enquiries yet.';return;}
+  for(const enquiry of [...data.enquiries].reverse()) {
+    const card=document.createElement('article');card.className='enquiry-card';
+    for(const line of [enquiry.name,new Date(enquiry.createdAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),enquiry.phone,enquiry.email,enquiry.message]) {const p=document.createElement('p');p.textContent=line;card.append(p);}
+    list.append(card);
+  }
+}
+document.addEventListener('click',async event=>{
+  const btn=event.target.closest('[data-admin-action]'); if(!btn || btn.disabled) return;
+  const id=btn.dataset.artId;btn.disabled=true;
+  try {switch(btn.dataset.adminAction) {case 'price':await quickSavePrice(id);break;case 'availability':await toggleAvailability(id);break;case 'featured':await toggleFeatured(id);break;case 'edit':openEditArtworkModal(id);break;case 'delete':await deleteArtwork(id);break;}}
+  finally {btn.disabled=false;}
+});
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('refreshEnquiriesBtn')?.addEventListener('click',()=>loadEnquiries().catch(err=>showToast(err.message,'error')));});
+document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeAdminModal(); });

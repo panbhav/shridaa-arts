@@ -17,12 +17,11 @@
     "displayOrder": 1,
     "shortDescription": "Regal black and antique gold circular mirror mandala with intricate mud-relief beadwork.",
     "detailedDescription": "An exquisite focal point piece created using traditional Kutch Lippan art techniques. Features concentric rings of sacred geometry, delicate mirror work (Aabhla), and warm metallic gold detailing on a rich matte black base.",
-    "image": "Assets/artworks/swarna-mandala-mirror.webp",
-    "fallbackImage": "Assets/artworks/swarna-mandala-mirror.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.27 PM (1).jpeg",
+    "image": "assets/artworks/swarna-mandala-mirror.webp",
+    "fallbackImage": "assets/artworks/swarna-mandala-mirror.jpg",
     "gallery": [
-      "Assets/artworks/swarna-mandala-mirror.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.27 PM (1).jpeg"
+      "assets/artworks/swarna-mandala-mirror.webp",
+      "assets/artworks/swarna-mandala-mirror-detail.jpg"
     ]
   },
   {
@@ -43,12 +42,11 @@
     "displayOrder": 2,
     "shortDescription": "Vibrant royal peacock relief sculpture surrounded by radiant concentric mirror arcs.",
     "detailedDescription": "Inspired by the grace and grandeur of India's national bird. This showstopper creation blends rich cobalt blue, emerald green, and radiant festive hues with precision clay embossing and sparkling mirror embellishments.",
-    "image": "Assets/artworks/mayura-peacock-mandala.webp",
-    "fallbackImage": "Assets/artworks/mayura-peacock-mandala.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-27 at 9.00.58 PM.jpeg",
+    "image": "assets/artworks/mayura-peacock-mandala.webp",
+    "fallbackImage": "assets/artworks/mayura-peacock-mandala.jpg",
     "gallery": [
-      "Assets/artworks/mayura-peacock-mandala.webp",
-      "Assets/WhatsApp Image 2026-09-27 at 9.00.58 PM.jpeg"
+      "assets/artworks/mayura-peacock-mandala.webp",
+      "assets/artworks/mayura-peacock-mandala-detail.jpg"
     ]
   },
   {
@@ -69,12 +67,11 @@
     "displayOrder": 3,
     "shortDescription": "Rajasthani architectural Jharokha wall plaque with integrated tea-light shelf.",
     "detailedDescription": "Evoking royal havelis of Rajasthan, this architectural wall sconce showcases an ornate flowering tree motif carved in mud relief, flanked by mirrored cusped arches and a dedicated ledge for tea lights or brass diyas.",
-    "image": "Assets/artworks/royal-jharokha-floral-sconce.webp",
-    "fallbackImage": "Assets/artworks/royal-jharokha-floral-sconce.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.30 PM (1).jpeg",
+    "image": "assets/artworks/royal-jharokha-floral-sconce.webp",
+    "fallbackImage": "assets/artworks/royal-jharokha-floral-sconce.jpg",
     "gallery": [
-      "Assets/artworks/royal-jharokha-floral-sconce.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.30 PM (1).jpeg"
+      "assets/artworks/royal-jharokha-floral-sconce.webp",
+      "assets/artworks/royal-jharokha-floral-sconce-detail.jpg"
     ]
   },
   {
@@ -95,12 +92,11 @@
     "displayOrder": 4,
     "shortDescription": "Serene Ganesha abstract silhouette adorned with mirror waves and dangling pearls.",
     "detailedDescription": "A sublime spiritual composition presenting Lord Ganesha through minimalist sweeping lines, clay beading, and leaf-shaped mirror pieces, finished with a cascading tassel of lustrous faux pearls.",
-    "image": "Assets/artworks/shree-ganesha-wall-medallion.webp",
-    "fallbackImage": "Assets/artworks/shree-ganesha-wall-medallion.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.03 PM (1).jpeg",
+    "image": "assets/artworks/shree-ganesha-wall-medallion.webp",
+    "fallbackImage": "assets/artworks/shree-ganesha-wall-medallion.jpg",
     "gallery": [
-      "Assets/artworks/shree-ganesha-wall-medallion.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.03 PM (1).jpeg"
+      "assets/artworks/shree-ganesha-wall-medallion.webp",
+      "assets/artworks/shree-ganesha-wall-medallion-detail.jpg"
     ]
   },
   {
@@ -121,12 +117,11 @@
     "displayOrder": 5,
     "shortDescription": "Protective evil-eye wall charm combining Mediterranean symbolism and Lippan craft.",
     "detailedDescription": "Handcrafted to invite positive energy and ward off negative vibes. Features concentric geometric clay lines, triangular mirror borders, and suspended brass bells that emit gentle chime accents.",
-    "image": "Assets/artworks/nazar-battu-evil-eye-wall-art.webp",
-    "fallbackImage": "Assets/artworks/nazar-battu-evil-eye-wall-art.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.03 PM.jpeg",
+    "image": "assets/artworks/nazar-battu-evil-eye-wall-art.webp",
+    "fallbackImage": "assets/artworks/nazar-battu-evil-eye-wall-art.jpg",
     "gallery": [
-      "Assets/artworks/nazar-battu-evil-eye-wall-art.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.03 PM.jpeg"
+      "assets/artworks/nazar-battu-evil-eye-wall-art.webp",
+      "assets/artworks/nazar-battu-evil-eye-wall-art-detail.jpg"
     ]
   },
   {
@@ -147,12 +142,11 @@
     "displayOrder": 6,
     "shortDescription": "3-panel spiritual triptych showcasing sacred Om surrounded by expanding mandala rays.",
     "detailedDescription": "A magnificent statement installation for prayer rooms or living spaces. Composed of a central square Om medallion framed harmoniously by two flanking semicircular mandala panels with intricate Aabhla mirror work.",
-    "image": "Assets/artworks/om-mandala-triptych-wall-set.webp",
-    "fallbackImage": "Assets/artworks/om-mandala-triptych-wall-set.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.27 PM.jpeg",
+    "image": "assets/artworks/om-mandala-triptych-wall-set.webp",
+    "fallbackImage": "assets/artworks/om-mandala-triptych-wall-set.jpg",
     "gallery": [
-      "Assets/artworks/om-mandala-triptych-wall-set.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.27 PM.jpeg"
+      "assets/artworks/om-mandala-triptych-wall-set.webp",
+      "assets/artworks/om-mandala-triptych-wall-set-detail.jpg"
     ]
   },
   {
@@ -173,12 +167,11 @@
     "displayOrder": 7,
     "shortDescription": "Whimsical crescent moon layout featuring embossed pink lotus flowers and vines.",
     "detailedDescription": "Combining functional reflective glass with organic artistic relief. Sculpted blossoming lotus buds meander across a warm butter-yellow background bordered by diamond mirrors.",
-    "image": "Assets/artworks/chandra-kamal-crescent-mirror.webp",
-    "fallbackImage": "Assets/artworks/chandra-kamal-crescent-mirror.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.28 PM (1).jpeg",
+    "image": "assets/artworks/chandra-kamal-crescent-mirror.webp",
+    "fallbackImage": "assets/artworks/chandra-kamal-crescent-mirror.jpg",
     "gallery": [
-      "Assets/artworks/chandra-kamal-crescent-mirror.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.28 PM (1).jpeg"
+      "assets/artworks/chandra-kamal-crescent-mirror.webp",
+      "assets/artworks/chandra-kamal-crescent-mirror-detail.jpg"
     ]
   },
   {
@@ -199,12 +192,11 @@
     "displayOrder": 8,
     "shortDescription": "Playful scalloped concentric wall mirror with vivid green, pink, and yellow hues.",
     "detailedDescription": "An uplifting folk-inspired accent mirror featuring undulating wavy relief rims studded with hundreds of small diamond and tear-drop mirrors that dance in room light.",
-    "image": "Assets/artworks/tarang-scalloped-wall-mirror.webp",
-    "fallbackImage": "Assets/artworks/tarang-scalloped-wall-mirror.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.29 PM.jpeg",
+    "image": "assets/artworks/tarang-scalloped-wall-mirror.webp",
+    "fallbackImage": "assets/artworks/tarang-scalloped-wall-mirror.jpg",
     "gallery": [
-      "Assets/artworks/tarang-scalloped-wall-mirror.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.29 PM.jpeg"
+      "assets/artworks/tarang-scalloped-wall-mirror.webp",
+      "assets/artworks/tarang-scalloped-wall-mirror-detail.jpg"
     ]
   },
   {
@@ -225,12 +217,11 @@
     "displayOrder": 9,
     "shortDescription": "Divine flute of Lord Krishna resting above a sacred lotus with three auspicious medallions.",
     "detailedDescription": "Celebrates Indian devotion with exquisite handcrafted clay details including Krishna's hands holding the golden bansuri, an ornate mor pankh (peacock feather), and auspicious Shubh, Om, and Labh medallions.",
-    "image": "Assets/artworks/krishna-bansuri-lotus-plaque.webp",
-    "fallbackImage": "Assets/artworks/krishna-bansuri-lotus-plaque.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.30 PM.jpeg",
+    "image": "assets/artworks/krishna-bansuri-lotus-plaque.webp",
+    "fallbackImage": "assets/artworks/krishna-bansuri-lotus-plaque.jpg",
     "gallery": [
-      "Assets/artworks/krishna-bansuri-lotus-plaque.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.30 PM.jpeg"
+      "assets/artworks/krishna-bansuri-lotus-plaque.webp",
+      "assets/artworks/krishna-bansuri-lotus-plaque-detail.jpg"
     ]
   },
   {
@@ -251,12 +242,11 @@
     "displayOrder": 10,
     "shortDescription": "Opulent entrance hanging featuring Lord Ganesha flanked by Shubh Labh discs.",
     "detailedDescription": "Perfect for festive Diwali celebrations and home entryways. Features deep indigo blue and pristine white mud art with pearl chains and an embroidered yellow net tassel.",
-    "image": "Assets/artworks/royal-ganesha-shubh-labh-toran.webp",
-    "fallbackImage": "Assets/artworks/royal-ganesha-shubh-labh-toran.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-27 at 9.01.23 PM.jpeg",
+    "image": "assets/artworks/royal-ganesha-shubh-labh-toran.webp",
+    "fallbackImage": "assets/artworks/royal-ganesha-shubh-labh-toran.jpg",
     "gallery": [
-      "Assets/artworks/royal-ganesha-shubh-labh-toran.webp",
-      "Assets/WhatsApp Image 2026-09-27 at 9.01.23 PM.jpeg"
+      "assets/artworks/royal-ganesha-shubh-labh-toran.webp",
+      "assets/artworks/royal-ganesha-shubh-labh-toran-detail.jpg"
     ]
   },
   {
@@ -277,12 +267,11 @@
     "displayOrder": 11,
     "shortDescription": "Traditional 3-panel doorway toran with embossed Shubh, Swastik, and Labh glyphs.",
     "detailedDescription": "Handcrafted with geometric precision, this auspicious trio panel brings traditional heritage to modern doorways, accompanied by silky yellow silk thread tassels.",
-    "image": "Assets/artworks/tri-panel-swastik-shubh-labh-toran.webp",
-    "fallbackImage": "Assets/artworks/tri-panel-swastik-shubh-labh-toran.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-27 at 9.01.12 PM.jpeg",
+    "image": "assets/artworks/tri-panel-swastik-shubh-labh-toran.webp",
+    "fallbackImage": "assets/artworks/tri-panel-swastik-shubh-labh-toran.jpg",
     "gallery": [
-      "Assets/artworks/tri-panel-swastik-shubh-labh-toran.webp",
-      "Assets/WhatsApp Image 2026-09-27 at 9.01.12 PM.jpeg"
+      "assets/artworks/tri-panel-swastik-shubh-labh-toran.webp",
+      "assets/artworks/tri-panel-swastik-shubh-labh-toran-detail.jpg"
     ]
   },
   {
@@ -303,12 +292,11 @@
     "displayOrder": 12,
     "shortDescription": "Delicate pastel pink lotus medallion adorned with natural cowrie shell charm.",
     "detailedDescription": "Soft hues meet traditional Lippan clay relief. Sculpted pink lotus buds surround a mirrored center ring, hung gracefully from pearl beads with genuine sea cowrie shells.",
-    "image": "Assets/artworks/gulabi-kamal-lotus-medallion.webp",
-    "fallbackImage": "Assets/artworks/gulabi-kamal-lotus-medallion.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.04 PM (1).jpeg",
+    "image": "assets/artworks/gulabi-kamal-lotus-medallion.webp",
+    "fallbackImage": "assets/artworks/gulabi-kamal-lotus-medallion.jpg",
     "gallery": [
-      "Assets/artworks/gulabi-kamal-lotus-medallion.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.04 PM (1).jpeg"
+      "assets/artworks/gulabi-kamal-lotus-medallion.webp",
+      "assets/artworks/gulabi-kamal-lotus-medallion-detail.jpg"
     ]
   },
   {
@@ -329,12 +317,11 @@
     "displayOrder": 13,
     "shortDescription": "Golden sunflower wall hanging featuring textured earthy core and shimmering mirror petals.",
     "detailedDescription": "Radiating natural sunshine and positive warmth, this handcrafted wall piece combines textured organic core clay with vibrant ochre petals and crescent-shaped mirrors.",
-    "image": "Assets/artworks/surya-mukhi-sunflower-medallion.webp",
-    "fallbackImage": "Assets/artworks/surya-mukhi-sunflower-medallion.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.04 PM.jpeg",
+    "image": "assets/artworks/surya-mukhi-sunflower-medallion.webp",
+    "fallbackImage": "assets/artworks/surya-mukhi-sunflower-medallion.jpg",
     "gallery": [
-      "Assets/artworks/surya-mukhi-sunflower-medallion.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.04 PM.jpeg"
+      "assets/artworks/surya-mukhi-sunflower-medallion.webp",
+      "assets/artworks/surya-mukhi-sunflower-medallion-detail.jpg"
     ]
   },
   {
@@ -355,12 +342,11 @@
     "displayOrder": 14,
     "shortDescription": "Intricate overlapping rainbow arcs forming an endless geometric mandala landscape.",
     "detailedDescription": "A tour-de-force of Kutch clay pinching and mirror embedding. Overlapping concentric curves of red, turquoise, and yellow create an illusion of motion and light refraction.",
-    "image": "Assets/artworks/rangoli-concentric-mandala-platter.webp",
-    "fallbackImage": "Assets/artworks/rangoli-concentric-mandala-platter.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.28 PM.jpeg",
+    "image": "assets/artworks/rangoli-concentric-mandala-platter.webp",
+    "fallbackImage": "assets/artworks/rangoli-concentric-mandala-platter.jpg",
     "gallery": [
-      "Assets/artworks/rangoli-concentric-mandala-platter.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.28 PM.jpeg"
+      "assets/artworks/rangoli-concentric-mandala-platter.webp",
+      "assets/artworks/rangoli-concentric-mandala-platter-detail.jpg"
     ]
   },
   {
@@ -381,12 +367,11 @@
     "displayOrder": 15,
     "shortDescription": "Solar floral mandala featuring swirling petal clay relief and shimmering mirrors.",
     "detailedDescription": "A classic Saurashtra village design reimagined for contemporary homes. Beautifully proportioned swirling petals surrounded by perimeter arches with mirror work.",
-    "image": "Assets/artworks/surya-mandala-courtyard-plate.webp",
-    "fallbackImage": "Assets/artworks/surya-mandala-courtyard-plate.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.12.29 PM (1).jpeg",
+    "image": "assets/artworks/surya-mandala-courtyard-plate.webp",
+    "fallbackImage": "assets/artworks/surya-mandala-courtyard-plate.jpg",
     "gallery": [
-      "Assets/artworks/surya-mandala-courtyard-plate.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.12.29 PM (1).jpeg"
+      "assets/artworks/surya-mandala-courtyard-plate.webp",
+      "assets/artworks/surya-mandala-courtyard-plate-detail.jpg"
     ]
   },
   {
@@ -407,12 +392,11 @@
     "displayOrder": 16,
     "shortDescription": "Pair of two square emerald-green tiles with embossed Devanagari Shubh and Labh.",
     "detailedDescription": "Crafted as welcoming blessings for main entrances and mandir walls, featuring tri-petal floral mirrors and white clay borders.",
-    "image": "Assets/artworks/emerald-shubh-labh-tiles.webp",
-    "fallbackImage": "Assets/artworks/emerald-shubh-labh-tiles.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.17.37 PM.jpeg",
+    "image": "assets/artworks/emerald-shubh-labh-tiles.webp",
+    "fallbackImage": "assets/artworks/emerald-shubh-labh-tiles.jpg",
     "gallery": [
-      "Assets/artworks/emerald-shubh-labh-tiles.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.17.37 PM.jpeg"
+      "assets/artworks/emerald-shubh-labh-tiles.webp",
+      "assets/artworks/emerald-shubh-labh-tiles-detail.jpg"
     ]
   },
   {
@@ -433,12 +417,11 @@
     "displayOrder": 17,
     "shortDescription": "Chic diamond-oriented tiles combining turquoise, soft pink, and gleaming mirrors.",
     "detailedDescription": "Contemporary colors blended seamlessly with age-old Kutch clay craft. An elegant festive gift or housewarming accent.",
-    "image": "Assets/artworks/rose-turquoise-diamond-shubh-labh.webp",
-    "fallbackImage": "Assets/artworks/rose-turquoise-diamond-shubh-labh.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.17.38 PM (1).jpeg",
+    "image": "assets/artworks/rose-turquoise-diamond-shubh-labh.webp",
+    "fallbackImage": "assets/artworks/rose-turquoise-diamond-shubh-labh.jpg",
     "gallery": [
-      "Assets/artworks/rose-turquoise-diamond-shubh-labh.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.17.38 PM (1).jpeg"
+      "assets/artworks/rose-turquoise-diamond-shubh-labh.webp",
+      "assets/artworks/rose-turquoise-diamond-shubh-labh-detail.jpg"
     ]
   },
   {
@@ -459,12 +442,11 @@
     "displayOrder": 18,
     "shortDescription": "Warm earthy diamond plaques featuring natural sand background and clay relief.",
     "detailedDescription": "Authentic Kutch aesthetic embodying earthy tones, mud textures, and mirror highlights that reflect the warmth of a brass diya.",
-    "image": "Assets/artworks/terracotta-heritage-shubh-labh-pair.webp",
-    "fallbackImage": "Assets/artworks/terracotta-heritage-shubh-labh-pair.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.17.38 PM.jpeg",
+    "image": "assets/artworks/terracotta-heritage-shubh-labh-pair.webp",
+    "fallbackImage": "assets/artworks/terracotta-heritage-shubh-labh-pair.jpg",
     "gallery": [
-      "Assets/artworks/terracotta-heritage-shubh-labh-pair.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.17.38 PM.jpeg"
+      "assets/artworks/terracotta-heritage-shubh-labh-pair.webp",
+      "assets/artworks/terracotta-heritage-shubh-labh-pair-detail.jpg"
     ]
   },
   {
@@ -485,12 +467,11 @@
     "displayOrder": 19,
     "shortDescription": "Curated set of 4 round wall hanging plates with swirling teardrop mirrors.",
     "detailedDescription": "A versatile set for galleries and accent walls. Can be hung together in a 2x2 grid or linear row to create an immersive artisanal display.",
-    "image": "Assets/artworks/suryoday-shubh-labh-plate-set.webp",
-    "fallbackImage": "Assets/artworks/suryoday-shubh-labh-plate-set.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.18.06 PM.jpeg",
+    "image": "assets/artworks/suryoday-shubh-labh-plate-set.webp",
+    "fallbackImage": "assets/artworks/suryoday-shubh-labh-plate-set.jpg",
     "gallery": [
-      "Assets/artworks/suryoday-shubh-labh-plate-set.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.18.06 PM.jpeg"
+      "assets/artworks/suryoday-shubh-labh-plate-set.webp",
+      "assets/artworks/suryoday-shubh-labh-plate-set-detail.jpg"
     ]
   },
   {
@@ -511,12 +492,11 @@
     "displayOrder": 20,
     "shortDescription": "Minimalist handcrafted mud coaster with golden wave line and perimeter mirrors.",
     "detailedDescription": "Handcrafted decorative base for tea-lights or festive sweets. Authentic price tag of ₹100 as shown.",
-    "image": "Assets/artworks/terracotta-swirl-diya-coaster.webp",
-    "fallbackImage": "Assets/artworks/terracotta-swirl-diya-coaster.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.56 PM.jpeg",
+    "image": "assets/artworks/terracotta-swirl-diya-coaster.webp",
+    "fallbackImage": "assets/artworks/terracotta-swirl-diya-coaster.jpg",
     "gallery": [
-      "Assets/artworks/terracotta-swirl-diya-coaster.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.56 PM.jpeg"
+      "assets/artworks/terracotta-swirl-diya-coaster.webp",
+      "assets/artworks/terracotta-swirl-diya-coaster-detail.jpg"
     ]
   },
   {
@@ -537,12 +517,11 @@
     "displayOrder": 21,
     "shortDescription": "Flower-shaped tea-light plate in vivid royal blue and yellow with mirror petals.",
     "detailedDescription": "Designed to hold standard tea light candles safely while casting sparkling reflections across your tablescape.",
-    "image": "Assets/artworks/neel-kamal-floral-diya-holder.webp",
-    "fallbackImage": "Assets/artworks/neel-kamal-floral-diya-holder.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.57 PM (1).jpeg",
+    "image": "assets/artworks/neel-kamal-floral-diya-holder.webp",
+    "fallbackImage": "assets/artworks/neel-kamal-floral-diya-holder.jpg",
     "gallery": [
-      "Assets/artworks/neel-kamal-floral-diya-holder.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.57 PM (1).jpeg"
+      "assets/artworks/neel-kamal-floral-diya-holder.webp",
+      "assets/artworks/neel-kamal-floral-diya-holder-detail.jpg"
     ]
   },
   {
@@ -563,12 +542,11 @@
     "displayOrder": 22,
     "shortDescription": "Festive red and green concentric ring tea light stand with fine clay dots.",
     "detailedDescription": "Traditional holiday colorway rendered with authentic hand-pinched Lippan clay borders.",
-    "image": "Assets/artworks/hritik-concentric-diya-holder.webp",
-    "fallbackImage": "Assets/artworks/hritik-concentric-diya-holder.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.57 PM.jpeg",
+    "image": "assets/artworks/hritik-concentric-diya-holder.webp",
+    "fallbackImage": "assets/artworks/hritik-concentric-diya-holder.jpg",
     "gallery": [
-      "Assets/artworks/hritik-concentric-diya-holder.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.57 PM.jpeg"
+      "assets/artworks/hritik-concentric-diya-holder.webp",
+      "assets/artworks/hritik-concentric-diya-holder-detail.jpg"
     ]
   },
   {
@@ -589,12 +567,11 @@
     "displayOrder": 23,
     "shortDescription": "Multi-petal blooming lotus tea light plate with embossed petals and gold rim.",
     "detailedDescription": "Sculpted with raised three-dimensional clay petals that cradle the candle flame, creating a warm luminous glow.",
-    "image": "Assets/artworks/rakta-kamal-blooming-diya-plate.webp",
-    "fallbackImage": "Assets/artworks/rakta-kamal-blooming-diya-plate.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.58 PM (1).jpeg",
+    "image": "assets/artworks/rakta-kamal-blooming-diya-plate.webp",
+    "fallbackImage": "assets/artworks/rakta-kamal-blooming-diya-plate.jpg",
     "gallery": [
-      "Assets/artworks/rakta-kamal-blooming-diya-plate.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.58 PM (1).jpeg"
+      "assets/artworks/rakta-kamal-blooming-diya-plate.webp",
+      "assets/artworks/rakta-kamal-blooming-diya-plate-detail.jpg"
     ]
   },
   {
@@ -615,12 +592,11 @@
     "displayOrder": 24,
     "shortDescription": "Sacred geometry star motif diya base with mirror diamond patterns.",
     "detailedDescription": "Inspired by traditional Yantra sacred geometry, featuring intersecting triangles in warm saffron and brick red.",
-    "image": "Assets/artworks/yantra-star-geometric-diya-holder.webp",
-    "fallbackImage": "Assets/artworks/yantra-star-geometric-diya-holder.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.58 PM.jpeg",
+    "image": "assets/artworks/yantra-star-geometric-diya-holder.webp",
+    "fallbackImage": "assets/artworks/yantra-star-geometric-diya-holder.jpg",
     "gallery": [
-      "Assets/artworks/yantra-star-geometric-diya-holder.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.58 PM.jpeg"
+      "assets/artworks/yantra-star-geometric-diya-holder.webp",
+      "assets/artworks/yantra-star-geometric-diya-holder-detail.jpg"
     ]
   },
   {
@@ -641,12 +617,11 @@
     "displayOrder": 25,
     "shortDescription": "Three-tiered concentric color band tealight plate with mirror borders.",
     "detailedDescription": "Clean circular lines with three harmonious color tiers, each embellished with delicate clay dots and mirrors.",
-    "image": "Assets/artworks/navrang-tri-tier-diya-holder.webp",
-    "fallbackImage": "Assets/artworks/navrang-tri-tier-diya-holder.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.59 PM (1).jpeg",
+    "image": "assets/artworks/navrang-tri-tier-diya-holder.webp",
+    "fallbackImage": "assets/artworks/navrang-tri-tier-diya-holder.jpg",
     "gallery": [
-      "Assets/artworks/navrang-tri-tier-diya-holder.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.59 PM (1).jpeg"
+      "assets/artworks/navrang-tri-tier-diya-holder.webp",
+      "assets/artworks/navrang-tri-tier-diya-holder-detail.jpg"
     ]
   },
   {
@@ -667,12 +642,11 @@
     "displayOrder": 26,
     "shortDescription": "Spring lime green and saffron lotus petal coaster with heart mirror accents.",
     "detailedDescription": "A refreshing botanical palette combining delicate green leaves and yellow petal clay relief.",
-    "image": "Assets/artworks/kesar-lotus-tea-light-stand.webp",
-    "fallbackImage": "Assets/artworks/kesar-lotus-tea-light-stand.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.10.59 PM.jpeg",
+    "image": "assets/artworks/kesar-lotus-tea-light-stand.webp",
+    "fallbackImage": "assets/artworks/kesar-lotus-tea-light-stand.jpg",
     "gallery": [
-      "Assets/artworks/kesar-lotus-tea-light-stand.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.10.59 PM.jpeg"
+      "assets/artworks/kesar-lotus-tea-light-stand.webp",
+      "assets/artworks/kesar-lotus-tea-light-stand-detail.jpg"
     ]
   },
   {
@@ -693,12 +667,11 @@
     "displayOrder": 27,
     "shortDescription": "Concentric celestial indigo and soft blush diya holder with diamond mirrors.",
     "detailedDescription": "Echoes twilight skies with deep indigo rims and shimmering diamond mirrors surrounding the candle core.",
-    "image": "Assets/artworks/aakash-mandala-tea-light-plate.webp",
-    "fallbackImage": "Assets/artworks/aakash-mandala-tea-light-plate.jpg",
-    "originalAsset": "Assets/WhatsApp Image 2026-09-25 at 7.11.00 PM.jpeg",
+    "image": "assets/artworks/aakash-mandala-tea-light-plate.webp",
+    "fallbackImage": "assets/artworks/aakash-mandala-tea-light-plate.jpg",
     "gallery": [
-      "Assets/artworks/aakash-mandala-tea-light-plate.webp",
-      "Assets/WhatsApp Image 2026-09-25 at 7.11.00 PM.jpeg"
+      "assets/artworks/aakash-mandala-tea-light-plate.webp",
+      "assets/artworks/aakash-mandala-tea-light-plate-detail.jpg"
     ]
   }
 ]

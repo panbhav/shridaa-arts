@@ -1,0 +1,12 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const dotenv = require('dotenv');
+const file = path.resolve(__dirname, '../.env');
+const values = fs.existsSync(file) ? dotenv.parse(fs.readFileSync(file)) : {};
+values.PORT ||= '3000';
+values.ADMIN_USERNAME ||= 'admin';
+if (!values.ADMIN_PASSWORD_HASH && (!values.ADMIN_PASSWORD || ['admin123','shridaa@art2026','your_secure_password_here'].includes(values.ADMIN_PASSWORD))) values.ADMIN_PASSWORD = crypto.randomBytes(18).toString('base64url');
+if (!values.JWT_SECRET || values.JWT_SECRET.length < 32 || ['shridaa_arts_secure_token_secret_key_2026','your_jwt_secret_here'].includes(values.JWT_SECRET)) values.JWT_SECRET = crypto.randomBytes(48).toString('hex');
+fs.writeFileSync(file, Object.entries(values).map(([k,v]) => `${k}=${JSON.stringify(v)}`).join('\n') + '\n', { mode: 0o600 });
+console.log('Secure configuration saved to private .env. Existing secure credentials were preserved.');
