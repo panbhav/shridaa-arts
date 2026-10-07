@@ -665,5 +665,29 @@
     "gallery": [
       "assets/artworks/upload-d5b6629f-c979-4a73-92cb-07a62e90579d.webp"
     ]
+  },
+  {
+    "id": "art-40139908-97ef-4c1a-849c-3b6874e552ad",
+    "slug": "artwork-40139908-97ef-4c1a-849c-3b6874e552ad",
+    "currency": "INR",
+    "originalPrice": 599,
+    "availability": "Available",
+    "featured": false,
+    "isHandmade": true,
+    "isCustomizable": true,
+    "isPriceVisible": true,
+    "size": "12 × 12 inches",
+    "material": "Mdf board mirror clay n colours",
+    "shortDescription": "A beautiful traditional Indian art piece featuring intricate mirror work, earthy tones, and detailed hand-painted patterns",
+    "detailedDescription": "This handcrafted Lippan art piece is created with beautiful mirror work and intricate traditional patterns. The warm earthy colours and detailed artwork give it a rich, elegant and traditional look. Each piece is carefully handmade, making it unique and special.",
+    "displayOrder": 28,
+    "name": "Mitti & Mirror",
+    "category": "Lippan art",
+    "price": 599,
+    "fallbackImage": "assets/artworks/upload-db1934a8-45f8-4ee6-b3e2-0574637627b1.webp",
+    "image": "assets/artworks/upload-db1934a8-45f8-4ee6-b3e2-0574637627b1.webp",
+    "gallery": [
+      "assets/artworks/upload-db1934a8-45f8-4ee6-b3e2-0574637627b1.webp"
+    ]
   }
 ]
