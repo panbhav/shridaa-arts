@@ -503,24 +503,23 @@
     "name": "Neel Kamal Floral Diya Holder",
     "slug": "neel-kamal-floral-diya-holder",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Wooden Base, Royal Blue & Sunny Yellow Relief, Teardrop Mirror Petals",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 21,
     "shortDescription": "Flower-shaped tea-light plate in vivid royal blue and yellow with mirror petals.",
     "detailedDescription": "Designed to hold standard tea light candles safely while casting sparkling reflections across your tablescape.",
-    "image": "assets/artworks/neel-kamal-floral-diya-holder.webp",
-    "fallbackImage": "assets/artworks/neel-kamal-floral-diya-holder.jpg",
+    "image": "assets/artworks/upload-f4c06560-fc57-4bbf-a1de-38dfcb1f4491.webp",
+    "fallbackImage": "assets/artworks/upload-f4c06560-fc57-4bbf-a1de-38dfcb1f4491.webp",
     "gallery": [
-      "assets/artworks/neel-kamal-floral-diya-holder.webp",
-      "assets/artworks/neel-kamal-floral-diya-holder-detail.jpg"
+      "assets/artworks/upload-f4c06560-fc57-4bbf-a1de-38dfcb1f4491.webp"
     ]
   },
   {
