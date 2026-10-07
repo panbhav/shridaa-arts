@@ -479,24 +479,23 @@
     "name": "Terracotta Swirl Diya Coaster",
     "slug": "terracotta-swirl-diya-coaster",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Ceramic MDF Disc, Terracotta Clay, Golden Wave Relief, Square Mirrors",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 20,
     "shortDescription": "Minimalist handcrafted mud coaster with golden wave line and perimeter mirrors.",
     "detailedDescription": "Handcrafted decorative base for tea-lights or festive sweets. Authentic price tag of ₹100 as shown.",
-    "image": "assets/artworks/terracotta-swirl-diya-coaster.webp",
-    "fallbackImage": "assets/artworks/terracotta-swirl-diya-coaster.jpg",
+    "image": "assets/artworks/upload-982cf673-0f75-4afc-8926-d6679859ec29.webp",
+    "fallbackImage": "assets/artworks/upload-982cf673-0f75-4afc-8926-d6679859ec29.webp",
     "gallery": [
-      "assets/artworks/terracotta-swirl-diya-coaster.webp",
-      "assets/artworks/terracotta-swirl-diya-coaster-detail.jpg"
+      "assets/artworks/upload-982cf673-0f75-4afc-8926-d6679859ec29.webp"
     ]
   },
   {
