@@ -527,24 +527,23 @@
     "name": "Hritik Red & Emerald Diya Holder",
     "slug": "hritik-concentric-diya-holder",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Clay & Wood Base, Carmine Red & Leaf Green Rings, Teardrop Mirrors",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 22,
     "shortDescription": "Festive red and green concentric ring tea light stand with fine clay dots.",
     "detailedDescription": "Traditional holiday colorway rendered with authentic hand-pinched Lippan clay borders.",
-    "image": "assets/artworks/hritik-concentric-diya-holder.webp",
-    "fallbackImage": "assets/artworks/hritik-concentric-diya-holder.jpg",
+    "image": "assets/artworks/upload-0db48232-7077-4b06-8843-2f9dbfdf7550.webp",
+    "fallbackImage": "assets/artworks/upload-0db48232-7077-4b06-8843-2f9dbfdf7550.webp",
     "gallery": [
-      "assets/artworks/hritik-concentric-diya-holder.webp",
-      "assets/artworks/hritik-concentric-diya-holder-detail.jpg"
+      "assets/artworks/upload-0db48232-7077-4b06-8843-2f9dbfdf7550.webp"
     ]
   },
   {
