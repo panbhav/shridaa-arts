@@ -599,24 +599,23 @@
     "name": "Navrang Tri-Tier Diya Holder",
     "slug": "navrang-tri-tier-diya-holder",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Clay & Wood, Turquoise, Yellow & Red Concentric Relief Bands, Mirrors",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 25,
     "shortDescription": "Three-tiered concentric color band tealight plate with mirror borders.",
     "detailedDescription": "Clean circular lines with three harmonious color tiers, each embellished with delicate clay dots and mirrors.",
-    "image": "assets/artworks/navrang-tri-tier-diya-holder.webp",
-    "fallbackImage": "assets/artworks/navrang-tri-tier-diya-holder.jpg",
+    "image": "assets/artworks/upload-2ebeee1e-b456-45fd-b6be-34dcbb45ba1e.webp",
+    "fallbackImage": "assets/artworks/upload-2ebeee1e-b456-45fd-b6be-34dcbb45ba1e.webp",
     "gallery": [
-      "assets/artworks/navrang-tri-tier-diya-holder.webp",
-      "assets/artworks/navrang-tri-tier-diya-holder-detail.jpg"
+      "assets/artworks/upload-2ebeee1e-b456-45fd-b6be-34dcbb45ba1e.webp"
     ]
   },
   {
