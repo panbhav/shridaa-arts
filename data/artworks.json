@@ -713,5 +713,29 @@
     "gallery": [
       "assets/artworks/upload-c7715485-9282-410a-8347-c965ee018e81.webp"
     ]
+  },
+  {
+    "id": "art-eafc208e-a907-41f9-ae31-244198af5986",
+    "slug": "artwork-eafc208e-a907-41f9-ae31-244198af5986",
+    "currency": "INR",
+    "originalPrice": 700,
+    "availability": "Sold",
+    "featured": false,
+    "isHandmade": true,
+    "isCustomizable": true,
+    "isPriceVisible": true,
+    "size": "12× 12 inches",
+    "material": "Mdf clay mirrors",
+    "shortDescription": "A vibrant handmade Lippan art piece featuring colourful mandala patterns, lotus motifs and intricate mirror work. Perfect for adding a traditional and artistic touch to your home décor.",
+    "detailedDescription": "Bring colour, tradition, and artistic charm to your space with this beautifully handcrafted Lippan Art piece. The artwork features a vibrant mandala design on one side and elegant lotus flowers with decorative floral vines on the other. Intricate mirror work, hand-painted details, and bright colours come together to create a unique statement piece.",
+    "displayOrder": 30,
+    "name": "Lotus lippan art",
+    "category": "Lippan art",
+    "price": 700,
+    "fallbackImage": "assets/artworks/upload-68e9a99a-4723-4705-b7b3-74e442f9b26c.webp",
+    "image": "assets/artworks/upload-68e9a99a-4723-4705-b7b3-74e442f9b26c.webp",
+    "gallery": [
+      "assets/artworks/upload-68e9a99a-4723-4705-b7b3-74e442f9b26c.webp"
+    ]
   }
 ]
