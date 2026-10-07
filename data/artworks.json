@@ -673,29 +673,5 @@
       "assets/artworks/aakash-mandala-tea-light-plate.webp",
       "assets/artworks/aakash-mandala-tea-light-plate-detail.jpg"
     ]
-  },
-  {
-    "id": "art-7c8462b1-fecb-437b-98b8-eee319263263",
-    "slug": "artwork-7c8462b1-fecb-437b-98b8-eee319263263",
-    "currency": "INR",
-    "originalPrice": 124343,
-    "availability": "Available",
-    "featured": false,
-    "isHandmade": true,
-    "isCustomizable": true,
-    "isPriceVisible": true,
-    "size": "2323",
-    "material": "231312312dfdfdf",
-    "shortDescription": "dgffgd",
-    "detailedDescription": "testtttttttttt",
-    "displayOrder": 28,
-    "name": "test",
-    "category": "Wall Mirrors",
-    "price": 122,
-    "fallbackImage": "assets/artworks/upload-b958a209-41cf-44b9-8da0-159c1b7ff12c.webp",
-    "image": "assets/artworks/upload-b958a209-41cf-44b9-8da0-159c1b7ff12c.webp",
-    "gallery": [
-      "assets/artworks/upload-b958a209-41cf-44b9-8da0-159c1b7ff12c.webp"
-    ]
   }
 ]
