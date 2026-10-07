@@ -551,24 +551,23 @@
     "name": "Rakta Kamal Blooming Diya Plate",
     "slug": "rakta-kamal-blooming-diya-plate",
     "category": "Diya & Tealight Holders",
-    "price": 130,
-    "originalPrice": 180,
+    "price": 150,
+    "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Clay Relief Petals, Deep Crimson Lotus Base, Gold Outer Ring, Mirror Accents",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 23,
     "shortDescription": "Multi-petal blooming lotus tea light plate with embossed petals and gold rim.",
     "detailedDescription": "Sculpted with raised three-dimensional clay petals that cradle the candle flame, creating a warm luminous glow.",
-    "image": "assets/artworks/rakta-kamal-blooming-diya-plate.webp",
-    "fallbackImage": "assets/artworks/rakta-kamal-blooming-diya-plate.jpg",
+    "image": "assets/artworks/upload-d1b6ec75-fa8e-44f6-80bc-68a99d2a2750.webp",
+    "fallbackImage": "assets/artworks/upload-d1b6ec75-fa8e-44f6-80bc-68a99d2a2750.webp",
     "gallery": [
-      "assets/artworks/rakta-kamal-blooming-diya-plate.webp",
-      "assets/artworks/rakta-kamal-blooming-diya-plate-detail.jpg"
+      "assets/artworks/upload-d1b6ec75-fa8e-44f6-80bc-68a99d2a2750.webp"
     ]
   },
   {
