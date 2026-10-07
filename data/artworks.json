@@ -575,24 +575,23 @@
     "name": "Yantra Star Geometric Diya Holder",
     "slug": "yantra-star-geometric-diya-holder",
     "category": "Diya & Tealight Holders",
-    "price": 130,
-    "originalPrice": 180,
+    "price": 150,
+    "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Wood Base, Star Yantra Clay Geometry, Saffron Orange, Mirror Triangles",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 24,
     "shortDescription": "Sacred geometry star motif diya base with mirror diamond patterns.",
     "detailedDescription": "Inspired by traditional Yantra sacred geometry, featuring intersecting triangles in warm saffron and brick red.",
-    "image": "assets/artworks/yantra-star-geometric-diya-holder.webp",
-    "fallbackImage": "assets/artworks/yantra-star-geometric-diya-holder.jpg",
+    "image": "assets/artworks/upload-b83db1e0-9600-4a18-b57a-dbf1b2bc957f.webp",
+    "fallbackImage": "assets/artworks/upload-b83db1e0-9600-4a18-b57a-dbf1b2bc957f.webp",
     "gallery": [
-      "assets/artworks/yantra-star-geometric-diya-holder.webp",
-      "assets/artworks/yantra-star-geometric-diya-holder-detail.jpg"
+      "assets/artworks/upload-b83db1e0-9600-4a18-b57a-dbf1b2bc957f.webp"
     ]
   },
   {
