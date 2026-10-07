@@ -623,24 +623,23 @@
     "name": "Kesar Lotus Tealight Stand",
     "slug": "kesar-lotus-tea-light-stand",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "MDF Base, Spring Green & Kesar Yellow Petals, Tear-drop Mirrors",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 26,
     "shortDescription": "Spring lime green and saffron lotus petal coaster with heart mirror accents.",
     "detailedDescription": "A refreshing botanical palette combining delicate green leaves and yellow petal clay relief.",
-    "image": "assets/artworks/kesar-lotus-tea-light-stand.webp",
-    "fallbackImage": "assets/artworks/kesar-lotus-tea-light-stand.jpg",
+    "image": "assets/artworks/upload-bb8df66b-392e-4ac5-a8fc-18b236e35184.webp",
+    "fallbackImage": "assets/artworks/upload-bb8df66b-392e-4ac5-a8fc-18b236e35184.webp",
     "gallery": [
-      "assets/artworks/kesar-lotus-tea-light-stand.webp",
-      "assets/artworks/kesar-lotus-tea-light-stand-detail.jpg"
+      "assets/artworks/upload-bb8df66b-392e-4ac5-a8fc-18b236e35184.webp"
     ]
   },
   {
