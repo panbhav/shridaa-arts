@@ -647,24 +647,23 @@
     "name": "Aakash Mandala Tealight Plate",
     "slug": "aakash-mandala-tea-light-plate",
     "category": "Diya & Tealight Holders",
-    "price": 100,
+    "price": 150,
     "originalPrice": 150,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
     "featured": false,
-    "size": "4.5 inches Dia",
+    "size": "6 inches Dia",
     "material": "Indigo Blue & Pastel Pink Bands, Droplet Mirrors, Clay Relief Beads",
     "isHandmade": true,
     "isCustomizable": false,
     "displayOrder": 27,
     "shortDescription": "Concentric celestial indigo and soft blush diya holder with diamond mirrors.",
     "detailedDescription": "Echoes twilight skies with deep indigo rims and shimmering diamond mirrors surrounding the candle core.",
-    "image": "assets/artworks/aakash-mandala-tea-light-plate.webp",
-    "fallbackImage": "assets/artworks/aakash-mandala-tea-light-plate.jpg",
+    "image": "assets/artworks/upload-d5b6629f-c979-4a73-92cb-07a62e90579d.webp",
+    "fallbackImage": "assets/artworks/upload-d5b6629f-c979-4a73-92cb-07a62e90579d.webp",
     "gallery": [
-      "assets/artworks/aakash-mandala-tea-light-plate.webp",
-      "assets/artworks/aakash-mandala-tea-light-plate-detail.jpg"
+      "assets/artworks/upload-d5b6629f-c979-4a73-92cb-07a62e90579d.webp"
     ]
   }
 ]
