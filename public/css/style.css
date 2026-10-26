@@ -2424,6 +2424,37 @@ button {
   color: #FFFFFF;
 }
 
+.footer-bottom-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.developer-credit {
+  font-size: 0.8rem;
+  color: #A89F93;
+  margin: 0;
+}
+
+.developer-credit .heart-icon {
+  color: var(--color-terracotta, #C4623D);
+  font-size: 0.85rem;
+  display: inline-block;
+  margin: 0 0.15rem;
+}
+
+.developer-link {
+  color: #E8DFD5;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast, 0.2s ease);
+}
+
+.developer-link:hover {
+  color: var(--color-gold, #D4AF37);
+  text-decoration: underline;
+}
+
 .dot-separator {
   opacity: 0.5;
 }
@@ -4188,6 +4219,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
  .estimator-result-box { padding: 1rem; }
  .est-price-col { min-width: 0; }
  .footer-bottom-links { flex-wrap: wrap; justify-content: center; max-width: 100%; }
+ .footer-bottom-copy { text-align: center; }
  .header-container { gap: .5rem; padding-block: .75rem; }
  .brand-logo { gap: .4rem; min-width: 0; }
  .brand-logo-img { width: 34px; height: 34px; }
