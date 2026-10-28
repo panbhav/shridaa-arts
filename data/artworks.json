@@ -205,7 +205,7 @@
     "slug": "krishna-bansuri-lotus-plaque",
     "category": "Spiritual & Festive",
     "price": 400,
-    "originalPrice": 400,
+    "originalPrice": null,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
