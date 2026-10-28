@@ -694,7 +694,7 @@
     "id": "art-fb3e1377-a8e3-4f8a-a99e-e51a91c48804",
     "slug": "artwork-fb3e1377-a8e3-4f8a-a99e-e51a91c48804",
     "currency": "INR",
-    "originalPrice": 700,
+    "originalPrice": null,
     "availability": "Sold",
     "featured": false,
     "isHandmade": true,
