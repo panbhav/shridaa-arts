@@ -255,7 +255,7 @@
     "slug": "tri-panel-swastik-shubh-labh-toran",
     "category": "Spiritual & Festive",
     "price": 350,
-    "originalPrice": 350,
+    "originalPrice": null,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
