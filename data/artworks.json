@@ -180,7 +180,7 @@
     "slug": "tarang-scalloped-wall-mirror",
     "category": "Wall Mirrors",
     "price": 750,
-    "originalPrice": 750,
+    "originalPrice": null,
     "currency": "INR",
     "isPriceVisible": true,
     "availability": "Available",
